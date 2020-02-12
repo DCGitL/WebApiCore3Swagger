@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore3Swagger", "WebApiCore3Swagger\WebApiCore3Swagger.csproj", "{9213E17C-5CA4-485E-A648-CA5F0BAC9191}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adventure.Works._2012.dbContext", "Adventure.Works.2012.dbContext\Adventure.Works._2012.dbContext.csproj", "{83D02BAD-CEA9-4A82-BDF9-7FCD64B90201}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9213E17C-5CA4-485E-A648-CA5F0BAC9191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9213E17C-5CA4-485E-A648-CA5F0BAC9191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9213E17C-5CA4-485E-A648-CA5F0BAC9191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9213E17C-5CA4-485E-A648-CA5F0BAC9191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D02BAD-CEA9-4A82-BDF9-7FCD64B90201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D02BAD-CEA9-4A82-BDF9-7FCD64B90201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D02BAD-CEA9-4A82-BDF9-7FCD64B90201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D02BAD-CEA9-4A82-BDF9-7FCD64B90201}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DC08946-5EB9-4910-A845-6079A7F7F5E4}
+	EndGlobalSection
+EndGlobal
