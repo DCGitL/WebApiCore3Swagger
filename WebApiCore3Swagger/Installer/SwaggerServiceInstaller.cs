@@ -22,6 +22,7 @@ namespace WebApiCore3Swagger.Installer
 
                 g.SwaggerDoc("v2.2", new OpenApiInfo { Title = "v2.2 Core web api", Description = "Swagger core api 2.2", Version = "v2.2" });
 
+               
                 g.OperationFilter<RemoveVersionFromParameter>();
                 g.DocumentFilter<ReplaceVersionWithValueInPath>();
 

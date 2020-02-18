@@ -10,7 +10,8 @@ namespace WebApiCore3Swagger.SwaggerFilters
     {
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-           IDictionary<string, OpenApiPathItem> pathItems = swaggerDoc.Paths.ToDictionary(p => p.Key.Replace("v{version}", swaggerDoc.Info.Version), p => p.Value);
+           IDictionary<string, OpenApiPathItem> pathItems = swaggerDoc.Paths
+                .ToDictionary(p => p.Key.Replace("v{version}", swaggerDoc.Info.Version), p => p.Value);
             swaggerDoc.Paths.Clear();
             foreach(var pathItem in pathItems)
             {
