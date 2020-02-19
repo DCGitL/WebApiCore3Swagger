@@ -30,11 +30,7 @@ namespace WebApiCore3Swagger
         {
             services.AddControllers();//.AddXmlSerializerFormatters();
 
-            //add identity db context
-            services.AddIdentityServiceExtension(Configuration);
-
-            //Adventure Works Db Service
-            services.AddNorthwindDbService(Configuration);
+          
 
             // services.AddBasicAuthenticationService();  //==>Note this set basic authentication globally
 

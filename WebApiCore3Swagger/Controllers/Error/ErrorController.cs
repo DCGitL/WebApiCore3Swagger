@@ -26,6 +26,7 @@ namespace WebApiCore3Swagger.Controllers.Error
         }
         [Route("/error")]   
         [MapToApiVersion("2.2")]
+        [MapToApiVersion("3.1")]
         public ActionResult<ProblemDetails> Error()
         {
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
@@ -38,6 +39,7 @@ namespace WebApiCore3Swagger.Controllers.Error
 
         [Route("/error-local-development")]    
         [MapToApiVersion("2.2")]
+        [MapToApiVersion("3.1")]
         public ActionResult<ProblemDetails> ErrorLocalDevelopment(
                 [FromServices] IWebHostEnvironment webHostEnvironment)
         {

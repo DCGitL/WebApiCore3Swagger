@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\AdventureWorksDwbuildVersion.cs" />
+    <Compile Remove="Models\DatabaseLog.cs" />
+    <Compile Remove="Models\DimAccount.cs" />
+    <Compile Remove="Models\DimCurrency.cs" />
+    <Compile Remove="Models\DimCustomer.cs" />
+    <Compile Remove="Models\DimDate.cs" />
+    <Compile Remove="Models\DimDepartmentGroup.cs" />
+    <Compile Remove="Models\DimGeography.cs" />
+    <Compile Remove="Models\DimOrganization.cs" />
+    <Compile Remove="Models\DimProduct.cs" />
+    <Compile Remove="Models\DimProductCategory.cs" />
+    <Compile Remove="Models\DimProductSubcategory.cs" />
+    <Compile Remove="Models\DimPromotion.cs" />
+    <Compile Remove="Models\DimReseller.cs" />
+    <Compile Remove="Models\DimSalesReason.cs" />
+    <Compile Remove="Models\DimScenario.cs" />
+    <Compile Remove="Models\FactAdditionalInternationalProductDescription.cs" />
+    <Compile Remove="Models\FactCallCenter.cs" />
+    <Compile Remove="Models\FactCurrencyRate.cs" />
+    <Compile Remove="Models\FactFinance.cs" />
+    <Compile Remove="Models\FactInternetSales.cs" />
+    <Compile Remove="Models\FactInternetSalesReason.cs" />
+    <Compile Remove="Models\FactProductInventory.cs" />
+    <Compile Remove="Models\FactResellerSales.cs" />
+    <Compile Remove="Models\FactSalesQuota.cs" />
+    <Compile Remove="Models\FactSurveyResponse.cs" />
+    <Compile Remove="Models\MigrationHistory.cs" />
+    <Compile Remove="Models\NewFactCurrencyRate.cs" />
+    <Compile Remove="Models\ProspectiveBuyer.cs" />
+    <Compile Remove="Models\VAssocSeqLineItems.cs" />
+    <Compile Remove="Models\VAssocSeqOrders.cs" />
+    <Compile Remove="Models\VDmprep.cs" />
+    <Compile Remove="Models\VTargetMail.cs" />
+    <Compile Remove="Models\VTimeSeries.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Adventure.Works.2012.dbContext\Adventure.Works._2012.dbContext.csproj" />
+    <ProjectReference Include="..\TestLib\TestLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
