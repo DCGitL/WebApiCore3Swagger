@@ -74,6 +74,7 @@ namespace WebApiCore3Swagger.Services.Auth
                 new Claim(JwtRegisteredClaimNames.Jti, GenerateRefreshToken()),
                 new Claim(ClaimTypes.Name, appUser.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, appUser.Email),
+              //  new Claim(ClaimTypes.Email, appUser.Email),
                 new Claim("id", appUser.Id)
             };
 

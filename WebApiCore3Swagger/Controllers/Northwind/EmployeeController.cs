@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApiCore3Swagger.RedisCache.Attribs.Settings;
 
 namespace WebApiCore3Swagger.Controllers.Northwind
 {
@@ -28,6 +29,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
         [HttpGet, Route("GetEmployees")]
         [MapToApiVersion("3.1")]
         [Produces(contentType:"application/json", additionalContentTypes: new string[] {"application/xml" })]
+        [RedisCachedAttribute(600)]
         public async Task<ActionResult<IEnumerable<ResponseEmployee>>> GetEmployees()
         {
             var results = await northwindRepository.GetAllAsyncEmployees();

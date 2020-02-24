@@ -1,14 +1,18 @@
 using Adventure.Works._2012.dbContext.Service;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net.Mime;
 using WebApiCore3Swagger.Authentication.Basic;
+using WebApiCore3Swagger.Authorizations;
+using WebApiCore3Swagger.CustomRouteConstraint;
 using WebApiCore3Swagger.Installer;
 using WebApiCore3Swagger.Middleware.JwtToken;
 using WebApiCore3Swagger.Models.IdentityDbContext;
@@ -36,12 +40,28 @@ namespace WebApiCore3Swagger
 
 
             // [Authorize(AuthenticationSchemes = "BasicAuthentication")] this set the authentication at the controller level
-            services.AddAuthentication("BasicAuthentication")
-           .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+           // services.AddAuthentication("BasicAuthentication")
+           //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             //Jwt authentication  service Registration
             services.AddJwtAuthServiceConfiguration(Configuration);
             services.AddAuthServiceExtension(Configuration);
+
+            //Adding custom requirement into our custom policy
+            services.AddAuthorization(options => {
+                options.AddPolicy("MustWorkForDavidcom", policy =>
+                {
+                    policy.AddRequirements(new WorksForCompanyRequirement("david.com"));
+                    
+                });
+                options.AddPolicy("MustBedavidcomandAdmin", policy =>
+                {
+                    policy.AddRequirements(new CustomizedAuthorizationRequirement());
+                });
+            });
+            services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
+            services.AddSingleton<IAuthorizationHandler, CustomizedAuthorizationHandler>();
+            //add my custom authorizaton policy
 
             //mvc
             services.AddMvc(config =>
@@ -66,6 +86,12 @@ namespace WebApiCore3Swagger
             //service installation goes here
 
             services.AddServicesInstaller(Configuration);
+
+            //add custom routing constraints. Note the key LatLongContraint is add to the route at the end point
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap.Add("LatLongContraint", typeof(CustomRouteContraintOnParameterTypeDouble));
+            });
 
 
             services.AddApiVersioning(options =>

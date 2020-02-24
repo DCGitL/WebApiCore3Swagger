@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +16,8 @@ namespace WebApiCore3Swagger.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]    
     [ApiController]
     [ApiVersion("2.2")]
-  
-    public class AccountController : ControllerBase
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+     public class AccountController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -31,6 +33,7 @@ namespace WebApiCore3Swagger.Controllers
         [HttpGet]
         [MapToApiVersion("2.2")]
         [Route("GetAccountUsers")]
+        [Authorize(Policy= "MustBedavidcomandAdmin")]
         public async Task<ActionResult<IEnumerable<ResponseUser>>> GetAccountUsers()
         {
 
