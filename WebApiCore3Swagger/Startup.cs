@@ -40,8 +40,8 @@ namespace WebApiCore3Swagger
 
 
             // [Authorize(AuthenticationSchemes = "BasicAuthentication")] this set the authentication at the controller level
-           // services.AddAuthentication("BasicAuthentication")
-           //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            services.AddAuthentication("BasicAuthentication")
+           .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             //Jwt authentication  service Registration
             services.AddJwtAuthServiceConfiguration(Configuration);

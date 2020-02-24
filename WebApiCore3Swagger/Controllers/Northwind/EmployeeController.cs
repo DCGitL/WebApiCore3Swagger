@@ -12,7 +12,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("3.1")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes= "BasicAuthentication")]
     public class EmployeeController : ControllerBase
     {
         private readonly INorthwindRepository northwindRepository;
