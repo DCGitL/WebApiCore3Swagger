@@ -70,6 +70,17 @@ namespace WebApiCore3Swagger
             services.AddTransient<IAuthorizationHandler, CustomizedAuthorizationHandler>();
             //add my custom authorizaton policy
 
+            //Adding Cross Origin Resource Sharing (CORS) 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+                    .AllowCredentials()
+                    .SetIsOriginAllowed((host) => true));
+            });
+
 
             //auto mapper configurations
             var mappingConfig = new MapperConfiguration(mc =>
@@ -136,7 +147,10 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
-          //  app.UseJwtTokenExpirationMiddleware();
+            // global cors policy make sure it is applied before Usemvc
+            app.UseCors("CorsPolicy");
+
+            //  app.UseJwtTokenExpirationMiddleware();
 
             app.UseHttpsRedirection();
 
