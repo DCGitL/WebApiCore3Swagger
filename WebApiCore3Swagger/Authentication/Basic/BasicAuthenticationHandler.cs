@@ -4,13 +4,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using WebApiCore3Swagger.Models.Auth;
 using WebApiCore3Swagger.Models.IdentityDbContext;
 
 namespace WebApiCore3Swagger.Authentication.Basic
@@ -63,6 +61,7 @@ namespace WebApiCore3Swagger.Authentication.Basic
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, appUser.Id),
                 new Claim(ClaimTypes.Name, appUser.UserName),
+                new Claim(ClaimTypes.Email, appUser.Email)
             };
 
             if (appUserRoles != null && appUserRoles.Count > 0)

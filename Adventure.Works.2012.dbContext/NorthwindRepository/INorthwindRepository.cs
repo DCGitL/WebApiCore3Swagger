@@ -10,5 +10,11 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
         Task<IEnumerable<ResponseEmployee>> GetAllAsyncEmployees();
         Task<ResponseEmployee> GetAsyncEmployee(int id);
 
+        Task<string> GetAllJsonStringEmployeesAsync();
+
+        Task<string> GetAllXmlStringEmployeesAsync();
+
+        Task<string> GetAllCSVStringEmployeesAsync();
+        Task<IEnumerable<ResponseOrder>> GetAllOrders();
     }
 }

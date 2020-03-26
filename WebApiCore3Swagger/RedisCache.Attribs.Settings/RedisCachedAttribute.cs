@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MessageManager;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ namespace WebApiCore3Swagger.RedisCache.Attribs.Settings
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var cachSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
+            var emailService = context.HttpContext.RequestServices.GetRequiredService<ISendEmail>();
+
             if(!cachSettings.Enabled)
             {
                 await next();
@@ -40,7 +43,7 @@ namespace WebApiCore3Swagger.RedisCache.Attribs.Settings
                     ContentType = "application/json",
                     StatusCode = 200
                 };
-
+                await  emailService.SendMail(cacheResponse, EnumEmailType.plaintext);
                 context.Result = contentResult;
                 return;
             }

@@ -19,6 +19,7 @@ namespace WebApiCore3Swagger
             try
             {
                 logger.Debug("init main");
+               
                 CreateHostBuilder(args).Build().Run();
             }
             catch (Exception exception)

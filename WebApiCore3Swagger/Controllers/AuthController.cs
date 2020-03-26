@@ -13,6 +13,7 @@ namespace WebApiCore3Swagger.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("2.2")]
+    [AllowAnonymous]
     public class AuthController : ControllerBase
     {
         private readonly IAuthJwtService authJwtService;
@@ -25,7 +26,6 @@ namespace WebApiCore3Swagger.Controllers
 
         [HttpPost, Route("Login")]
         [MapToApiVersion("2.2")]
-        [AllowAnonymous]
         public async Task<ActionResult<ResponseAuth>> Login([FromBody] RequestAuthUser user)
         {
             var responseResult = await authJwtService.AsyncAuthenticate(user.userName, user.Password);
@@ -45,7 +45,6 @@ namespace WebApiCore3Swagger.Controllers
         /// <returns></returns>
         [HttpPost, Route("RefreshToken")]
         [MapToApiVersion("2.2")]
-        [AllowAnonymous]
         //[SwaggerResponse(200, description: "Get user Information", Type = typeof(User))]
         [Produces(contentType: "application/json", additionalContentTypes: new string[] { "application/xml" })]
         public async Task<ActionResult<RefreshTokenResponse>> RefreshToken([FromBody] RefreshTokenRequest refreshToken)

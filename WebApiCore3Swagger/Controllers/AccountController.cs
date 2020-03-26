@@ -13,6 +13,9 @@ using WebApiCore3Swagger.Models.IdentityDbContext;
 
 namespace WebApiCore3Swagger.Controllers
 {
+    /// <summary>
+    /// This controller usess jwt token authentication
+    /// </summary>
     [Route("api/v{version:apiVersion}/[controller]")]    
     [ApiController]
     [ApiVersion("2.2")]
@@ -27,8 +30,11 @@ namespace WebApiCore3Swagger.Controllers
         }
 
         /// <summary>
-        /// Get a list of Api Users
+        /// Get a list of Api Users must be authenticated by jwt token to access this endpoint
         /// </summary>
+        /// <remarks>
+        /// This end point has an authorization policy attached to it => Mustbedacid.comandAdmin
+        /// </remarks>
         /// <returns></returns>
         [HttpGet]
         [MapToApiVersion("2.2")]

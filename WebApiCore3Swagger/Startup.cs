@@ -1,4 +1,6 @@
-using Adventure.Works._2012.dbContext.Service;
+using Adventure.Works._2012.dbContext.AutoMapper;
+using AutoMapper;
+using MessageManager.RegisterSerive;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -14,8 +16,6 @@ using WebApiCore3Swagger.Authentication.Basic;
 using WebApiCore3Swagger.Authorizations;
 using WebApiCore3Swagger.CustomRouteConstraint;
 using WebApiCore3Swagger.Installer;
-using WebApiCore3Swagger.Middleware.JwtToken;
-using WebApiCore3Swagger.Models.IdentityDbContext;
 using WebApiCore3Swagger.Services.Auth.ServiceExtension;
 
 namespace WebApiCore3Swagger
@@ -34,7 +34,10 @@ namespace WebApiCore3Swagger
         {
             services.AddControllers();//.AddXmlSerializerFormatters();
 
-          
+
+            //service installation goes here
+
+            services.AddServicesInstaller(Configuration);
 
             // services.AddBasicAuthenticationService();  //==>Note this set basic authentication globally
 
@@ -49,20 +52,37 @@ namespace WebApiCore3Swagger
 
             //Adding custom requirement into our custom policy
             services.AddAuthorization(options => {
+                //Implement this by adding this => [Authorize(Policy="MustWorkForDavidCom")] at the controller or required end point
                 options.AddPolicy("MustWorkForDavidcom", policy =>
                 {
                     policy.AddRequirements(new WorksForCompanyRequirement("david.com"));
                     
                 });
+                //Implement this by adding this => [Authorize(Policy="MustBedavidcomandAdmin")] at the controller or required end point
                 options.AddPolicy("MustBedavidcomandAdmin", policy =>
                 {
                     policy.AddRequirements(new CustomizedAuthorizationRequirement());
                 });
             });
             services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
-            services.AddSingleton<IAuthorizationHandler, CustomizedAuthorizationHandler>();
+
+            //Note add the customAuthorizationHandler as AddTransient if injecting database objects this will cause a database call everytime when user hits the end point that uses this authorization policy
+            services.AddTransient<IAuthorizationHandler, CustomizedAuthorizationHandler>();
             //add my custom authorizaton policy
 
+
+            //auto mapper configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutoMapperDataProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+
+            //add mailing serivce
+            services.AddMessageServices(Configuration);
             //mvc
             services.AddMvc(config =>
             {
@@ -81,11 +101,9 @@ namespace WebApiCore3Swagger
                     return result;
 
                 };
-            });
+            }).AddNewtonsoftJson(); //Note add this package => Microsoft.AspNetCore.Mvc.NewtonsoftJson to the project this support the controller to return JsonResult 
 
-            //service installation goes here
 
-            services.AddServicesInstaller(Configuration);
 
             //add custom routing constraints. Note the key LatLongContraint is add to the route at the end point
             services.Configure<RouteOptions>(options =>
@@ -118,7 +136,7 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseJwtTokenExpirationMiddleware();
+          //  app.UseJwtTokenExpirationMiddleware();
 
             app.UseHttpsRedirection();
 

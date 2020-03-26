@@ -71,7 +71,7 @@ namespace WebApiCore3Swagger.Services.Auth
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, appUser.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, GenerateRefreshToken()),
+                new Claim(JwtRegisteredClaimNames.Jti, GenerateJwtTokenId()),
                 new Claim(ClaimTypes.Name, appUser.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, appUser.Email),
               //  new Claim(ClaimTypes.Email, appUser.Email),
@@ -141,7 +141,7 @@ namespace WebApiCore3Swagger.Services.Auth
                 //token is invalid
                 return new RefreshTokenResponse { Errors = new[] { "Invalid Token " } };
             }
-            _tokenValidationParameters.RequireExpirationTime = true;
+            _tokenValidationParameters.ValidateLifetime = true;
 
             var exptime = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value;
 
@@ -221,11 +221,10 @@ namespace WebApiCore3Swagger.Services.Auth
 
         }
 
-        private string GenerateRefreshToken()
+        private string GenerateJwtTokenId()
         {
             var randomnumber = new byte[32];
-            string result = string.Empty;
-
+          
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomnumber);

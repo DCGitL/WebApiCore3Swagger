@@ -14,7 +14,10 @@ namespace Adventure.Works._2012.dbContext.ResponseModels
         [Required]
         [StringLength(10)]
         public string FirstName { get; set; }
-       
+
+        [StringLength(30)]
+        public string Title { get; set; }
+
         [StringLength(60)]
         public string Address { get; set; }
         [StringLength(15)]
