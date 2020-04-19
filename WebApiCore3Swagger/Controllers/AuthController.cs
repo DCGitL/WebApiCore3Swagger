@@ -26,6 +26,7 @@ namespace WebApiCore3Swagger.Controllers
 
         [HttpPost, Route("Login")]
         [MapToApiVersion("2.2")]
+        [Produces(contentType: "application/json", additionalContentTypes: new string[] { "application/xml" })]
         public async Task<ActionResult<ResponseAuth>> Login([FromBody] RequestAuthUser user)
         {
             var responseResult = await authJwtService.AsyncAuthenticate(user.userName, user.Password);

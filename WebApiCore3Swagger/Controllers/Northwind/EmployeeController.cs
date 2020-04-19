@@ -1,13 +1,17 @@
 ﻿using Adventure.Works._2012.dbContext.Northwind.Repository;
 using Adventure.Works._2012.dbContext.ResponseModels;
 using MessageManager;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -20,16 +24,19 @@ namespace WebApiCore3Swagger.Controllers.Northwind
     [ApiController]
     [ApiVersion("3.1")]
     // [Authorize(AuthenticationSchemes = "BasicAuthentication")]
+  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     // [Authorize(Roles = "Admin")]
     public class EmployeeController : ControllerBase
     {
         private readonly INorthwindRepository northwindRepository;
         private readonly ISendEmail sendmail;
+        private readonly IWebHostEnvironment environment;
 
-        public EmployeeController(INorthwindRepository northwindRepository, ISendEmail sendmail)
+        public EmployeeController(INorthwindRepository northwindRepository, ISendEmail sendmail, IWebHostEnvironment environment)
         {
             this.northwindRepository = northwindRepository;
             this.sendmail = sendmail;
+            this.environment = environment;
         }
 
         /// <summary>
@@ -89,7 +96,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
             return Ok(orders);
         }
 
-        [HttpGet, Route("GetEmployeesJsonString")]
+        [HttpGet, Route("GetEmployeesJsXmlCsv")]
         [MapToApiVersion("3.1")]
         [Produces("application/json", additionalContentTypes: new string[] { "application/xml","text/xml","text/csv" },Type =typeof(List<object>))]
         public async Task<IActionResult> GetAllJsonStringEmployees()
@@ -133,6 +140,26 @@ namespace WebApiCore3Swagger.Controllers.Northwind
 
             }
 
+
+        }
+
+        [HttpGet, Route("GetJsonString")]
+        [MapToApiVersion("3.1")]
+        [Produces("application/json")]
+        public async Task<IActionResult> GetJsonData()
+        {
+
+          var val = await   Task.Run(() =>
+            {
+                string json = string.Empty;
+                var folderDetails = environment.ContentRootPath + environment.WebRootPath;
+                var filePath = $"{folderDetails}\\JsonData\\response_1585576005933.json";
+                 json = System.IO.File.ReadAllText(filePath);
+                return json;
+            });
+          var jsonObj = JObject.Parse(val);
+           
+            return Ok(jsonObj);
 
         }
     }

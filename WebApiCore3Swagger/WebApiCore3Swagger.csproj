@@ -9,12 +9,17 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>0e1bf52d-e249-4652-81a8-ff9c0b8f0546</UserSecretsId>
-    
+   
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Migrations\20200130045103_InitialCreate.cs" />
     <Compile Remove="Migrations\20200130045103_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+    <Content Remove="appsettings.Production.json" />
   </ItemGroup>
 
   <ItemGroup>

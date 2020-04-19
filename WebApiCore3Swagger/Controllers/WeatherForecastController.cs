@@ -10,7 +10,7 @@ namespace WebApiCore3Swagger.Controllers
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("3.1")]
-    [Authorize]
+   // [Authorize]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -37,6 +37,16 @@ namespace WebApiCore3Swagger.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet]
+        [MapToApiVersion("3.1")]
+        [Route("GetCurrentEndpoint")]
+        public string  GetCurrentEndpoint()
+        {
+            string url = string.Concat(Request.Scheme, "://", Request.Host.ToUriComponent(), Request.PathBase.ToUriComponent(),Request.Path.ToUriComponent());
+
+            return url;
         }
     }
 }

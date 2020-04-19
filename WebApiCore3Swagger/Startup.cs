@@ -28,15 +28,30 @@ namespace WebApiCore3Swagger
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly string MyCorsPolicy = "CorsPolicy";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyCorsPolicy, builder =>
+                {
+                    builder//.WithOrigins("http://localhost:5000")
+                    .SetIsOriginAllowed(so => true)
+                    .WithExposedHeaders("Content-Disposition")
+                     .AllowAnyHeader()
+                     .AllowAnyMethod()
+                     .AllowCredentials();
+                });
+
+            });
+
             services.AddControllers();//.AddXmlSerializerFormatters();
 
+           
 
             //service installation goes here
-
+            
             services.AddServicesInstaller(Configuration);
 
             // services.AddBasicAuthenticationService();  //==>Note this set basic authentication globally
@@ -69,17 +84,6 @@ namespace WebApiCore3Swagger
             //Note add the customAuthorizationHandler as AddTransient if injecting database objects this will cause a database call everytime when user hits the end point that uses this authorization policy
             services.AddTransient<IAuthorizationHandler, CustomizedAuthorizationHandler>();
             //add my custom authorizaton policy
-
-            //Adding Cross Origin Resource Sharing (CORS) 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowAnyOrigin()
-                    .AllowCredentials()
-                    .SetIsOriginAllowed((host) => true));
-            });
 
 
             //auto mapper configurations
@@ -121,8 +125,12 @@ namespace WebApiCore3Swagger
             {
                 options.ConstraintMap.Add("LatLongContraint", typeof(CustomRouteContraintOnParameterTypeDouble));
             });
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+                });
 
-
+                
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
@@ -135,7 +143,7 @@ namespace WebApiCore3Swagger
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-           
+            app.UseCors(MyCorsPolicy);
 
             if (env.IsDevelopment())
             {
@@ -147,10 +155,8 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
-            // global cors policy make sure it is applied before Usemvc
-            app.UseCors("CorsPolicy");
-
-            //  app.UseJwtTokenExpirationMiddleware();
+          
+          //  app.UseJwtTokenExpirationMiddleware();
 
             app.UseHttpsRedirection();
 

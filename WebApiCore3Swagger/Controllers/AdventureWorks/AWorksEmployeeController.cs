@@ -23,7 +23,7 @@ namespace WebApiCore3Swagger.Controllers.AdventureWorks
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("3.1")]
-  // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AWorksEmployeeController : ControllerBase
     {
         private readonly IAdventureWorksRepository aworkrepository;
@@ -43,7 +43,7 @@ namespace WebApiCore3Swagger.Controllers.AdventureWorks
         /// </remarks>
         [HttpGet, Route("GetAdventureWorksEmployees")]
         [MapToApiVersion("3.1")]
-      //  [RedisCached(600)]
+        [RedisCached(60)]
         public async Task<ActionResult<IEnumerable<ResponseAwEmployee>>> GetAwEmployees()
         {
             var results = await aworkrepository.GetAdventureWorksEmployeesAsync();
@@ -58,7 +58,7 @@ namespace WebApiCore3Swagger.Controllers.AdventureWorks
 
         [HttpGet, Route("GetAdventureWorksEmployee")]
         [MapToApiVersion("3.1")]
-       // [RedisCached(60)]
+        [RedisCached(60)]
         public async Task<ActionResult<ResponseAwEmployee>> GetEmployees(int id)
         {
             var results = await aworkrepository.GetEmployee(id);
