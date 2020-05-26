@@ -1,5 +1,3 @@
-using Adventure.Works._2012.dbContext.AutoMapper;
-using AutoMapper;
 using MessageManager.RegisterSerive;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -86,14 +84,7 @@ namespace WebApiCore3Swagger
             //add my custom authorizaton policy
 
 
-            //auto mapper configurations
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperDataProfile());
-            });
-
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+           
 
 
             //add mailing serivce

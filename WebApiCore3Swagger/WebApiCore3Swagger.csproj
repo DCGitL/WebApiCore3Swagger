@@ -36,7 +36,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Adventure.Works.2012.dbContext\Adventure.Works._2012.dbContext.csproj" />
+    <ProjectReference Include="..\EmployeeDB.Dal\EmployeeDB.Dal.csproj" />
     <ProjectReference Include="..\MessageManager\MessageManager.csproj" />
     <ProjectReference Include="..\TestLib\TestLib.csproj" />
   </ItemGroup>

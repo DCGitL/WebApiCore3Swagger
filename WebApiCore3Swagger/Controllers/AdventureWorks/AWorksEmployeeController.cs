@@ -72,7 +72,7 @@ namespace WebApiCore3Swagger.Controllers.AdventureWorks
 
         [HttpGet, Route("GetAdventureWorksEmployeesPhoto")]
         [MapToApiVersion("3.1")]
-        // [RedisCachedAttribute(60)]
+        [RedisCachedAttribute(60)]
         public async Task<IActionResult> GetEmployeePhoto(int employeeId)
         {
 

@@ -24,7 +24,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
     [ApiController]
     [ApiVersion("3.1")]
     // [Authorize(AuthenticationSchemes = "BasicAuthentication")]
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     // [Authorize(Roles = "Admin")]
     public class EmployeeController : ControllerBase
     {
@@ -76,7 +76,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
 
             var results = await northwindRepository.GetAsyncEmployee(id);
             string val = JsonConvert.SerializeObject(results);
-            await sendmail.SendMail(val, EnumEmailType.plaintext);
+          //  await sendmail.SendMail(val, EnumEmailType.plaintext);
 
             return Ok(results);
         }

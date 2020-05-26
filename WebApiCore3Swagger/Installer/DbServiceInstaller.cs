@@ -1,4 +1,5 @@
 ﻿using Adventure.Works._2012.dbContext.Service;
+using EmployeeDB.Dal.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TestLib.InstallService;
@@ -19,6 +20,9 @@ namespace WebApiCore3Swagger.Installer
 
             //Adventure Db service installer
             services.AddAdventureWorksDbServices(configuration);
+
+            //EmployeeDb Service Installer
+            services.AddEmployeeDbExtension(configuration);
         }
     }
 }

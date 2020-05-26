@@ -17,6 +17,10 @@ namespace MessageManager
         public async Task SendMail(string mailbody, EnumEmailType emailtype)
         {
             var apiKey = configuration.GetSection("SendGridApiKey").Value;
+            if(string.IsNullOrEmpty(apiKey)) 
+            {
+                throw new ArgumentNullException("Email apikey=> SendGridApiKey in configuration does not exist");
+            }
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("tony.peart62@gmail.com", "tony test");
