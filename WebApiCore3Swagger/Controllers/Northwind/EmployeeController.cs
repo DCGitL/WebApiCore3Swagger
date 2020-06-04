@@ -48,7 +48,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
         /// </remarks>
         [HttpGet, Route("GetEmployees")]
         [MapToApiVersion("3.1")]
-        [Produces(contentType: "application/json", additionalContentTypes: new string[] { "application/xml" })]
+        [Produces(contentType: "application/json", additionalContentTypes: new string[] { "application/xml", "text/csv" })]
         [RedisCached(60)]
         //  [Authorize(Policy = "MustBedavidcomandAdmin")]
         public async Task<ActionResult<IEnumerable<ResponseEmployee>>> GetEmployees()
@@ -98,12 +98,12 @@ namespace WebApiCore3Swagger.Controllers.Northwind
 
         [HttpGet, Route("GetEmployeesJsXmlCsv")]
         [MapToApiVersion("3.1")]
-        [Produces("application/json", additionalContentTypes: new string[] { "application/xml","text/xml","text/csv" },Type =typeof(List<object>))]
+        [Produces("application/json", additionalContentTypes: new string[] { "application/xml","text/xml","text/csv+d" },Type =typeof(List<object>))]
         public async Task<IActionResult> GetAllJsonStringEmployees()
         {
             var accepttype = Request.Headers["Accept"];
             string employeesstr = string.Empty;
-            if (accepttype == "text/csv")
+            if (accepttype == "text/csv+d")
             {
                 var csv = await northwindRepository.GetAllCSVStringEmployeesAsync();
 

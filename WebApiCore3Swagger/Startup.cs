@@ -44,7 +44,7 @@ namespace WebApiCore3Swagger
 
             });
 
-            services.AddControllers();//.AddXmlSerializerFormatters();
+           // services.AddControllers();//.AddXmlSerializerFormatters(); => this was move to the installer
 
            
 

@@ -1,6 +1,7 @@
 ﻿using Adventure.Works._2012.dbContext.Models;
 using Adventure.Works._2012.dbContext.ResponseModels;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,42 +16,63 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
     public class NorthwindRepository : INorthwindRepository
     {
         private readonly NorthwindContext context;
-        private readonly IMapper map;
-
-        public NorthwindRepository(NorthwindContext context, IMapper map)
+       
+        public NorthwindRepository(NorthwindContext context)
         {
             this.context = context;
-            this.map = map;
+            
         }
         public async Task<IEnumerable<ResponseEmployee>> GetAllAsyncEmployees()
         {
-            var results = await Task.Run(() =>
+
+            var val = await context.Employees.Select(e => new ResponseEmployee
             {
-                var val = context.Employees;
-                var mapperemployees = map.Map<List<ResponseEmployee>>(val);
+                EmployeeId = e.EmployeeId,
+                Title = e.Title,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Address = e.Address,
+                City = e.City,
+                PostalCode = e.PostalCode,
+                Country = e.Country,
+                Region = e.Region,
+                HomePhone = e.HomePhone
 
-                return mapperemployees;
-            });
+            }).ToListAsync();
+           
 
-            return results;
+            return val;
+
         }
 
         public async Task<string> GetAllJsonStringEmployeesAsync()
         {
-            var memployees = await Task.Run(() =>
-            {
-                var val = context.Employees;
-                var mapperemployees = map.Map<List<ResponseEmployee>>(val);
-                return mapperemployees;
-            });
 
-            DataTable table = GetEmployeeDataTable(memployees);
+
+            var val = await context.Employees.Select(e => new ResponseEmployee {
+                 EmployeeId = e.EmployeeId,
+                 Title = e.Title,
+                 FirstName = e.FirstName,
+                 LastName = e.LastName,
+                 Address = e.Address,
+                 City = e.City,
+                 PostalCode = e.PostalCode,
+                 Country = e.Country,
+                 Region = e.Region,
+                 HomePhone = e.HomePhone
+                  
+            }).ToListAsync();
+         
+            DataTable table = GetEmployeeDataTable(val);
             string JsonString = string.Empty;
             if (table.Rows.Count > 0)
             {
                 JsonString = JsonConvert.SerializeObject(table);
             }
             return JsonString;
+
+
+
         }
 
         private static DataTable GetEmployeeDataTable(List<ResponseEmployee> memployees)
@@ -105,38 +127,70 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
 
         public async Task<IEnumerable<ResponseOrder>> GetAllOrders()
         {
-            var orders = await Task.FromResult(context.Orders);
+            var orders = await context.Orders.Select(o=> new ResponseOrder {
+                 OrderId = o.OrderId,
+                 ShipAddress = o.ShipAddress,
+                 ShipCity = o.ShipCity,
+                 ShipPostalCode = o.ShipPostalCode,
+                 ShipRegion = o.ShipRegion,
+                 ShipCountry = o.ShipCountry,
+                 ShipName = o.ShipName,
+                 ShippedDate = o.ShippedDate,
+                 Freight = o.Freight,
+                  OrderDate = o.OrderDate,
+                   RequiredDate = o.RequiredDate
+            }).ToListAsync();
 
-            var mapperOrders = map.Map<List<ResponseOrder>>(orders);
+           
 
-            return mapperOrders;
+            return orders;
         }
 
         public async Task<ResponseEmployee> GetAsyncEmployee(int id)
         {
-            var result = await Task.Run(() =>
-            {
-                var val = context.Employees.FirstOrDefault(e => e.EmployeeId == id);
-                var mapemployee = map.Map<ResponseEmployee>(val);
-                return mapemployee;
+           
+                var val = await context.Employees.Select(e => new ResponseEmployee
+                {
+                    EmployeeId = e.EmployeeId,
+                    Title = e.Title,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Address = e.Address,
+                    City = e.City,
+                    PostalCode = e.PostalCode,
+                    Country = e.Country,
+                    Region = e.Region,
+                    HomePhone = e.HomePhone
 
-            });
+                }).FirstOrDefaultAsync(e => e.EmployeeId == id);
+               
+                return val;
 
-
-            return result;
         }
 
         public async Task<string> GetAllXmlStringEmployeesAsync()
         {
 
-            var memployees = await Task.Run(() =>
-            {
-                var val = context.Employees;
-                var mapperemployees = map.Map<List<ResponseEmployee>>(val);
-                return mapperemployees;
-            });
+        
+                var val = await context.Employees.Select(e => new ResponseEmployee
+                {
+                    EmployeeId = e.EmployeeId,
+                    Title = e.Title,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Address = e.Address,
+                    City = e.City,
+                    PostalCode = e.PostalCode,
+                    Country = e.Country,
+                    Region = e.Region,
+                    HomePhone = e.HomePhone
 
-            DataTable table = GetEmployeeDataTable(memployees);
+                }).ToListAsync();
+               
+               
+         
+
+            DataTable table = GetEmployeeDataTable(val);
             string xmlstr = string.Empty;
             StringBuilder xmlstrb = new StringBuilder(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
             using (MemoryStream str = new MemoryStream())
@@ -169,26 +223,37 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
         {
             StringBuilder sb = new StringBuilder();
 
-            var memployees = await Task.Run(() =>
-            {
-                var val = context.Employees;
-                var mapperemployees = map.Map<List<ResponseEmployee>>(val);
-                return mapperemployees;
-            });
+          
+                var val = await context.Employees.Select(e => new ResponseEmployee
+                {
+                    EmployeeId = e.EmployeeId,
+                    Title = e.Title,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    Address = e.Address,
+                    City = e.City,
+                    PostalCode = e.PostalCode,
+                    Country = e.Country,
+                    Region = e.Region,
+                    HomePhone = e.HomePhone
 
-            DataTable table = GetEmployeeDataTable(memployees);
+                }).ToListAsync();
+               
+              
+
+            DataTable table = GetEmployeeDataTable(val);
             //Create the header
-            foreach(var col in table.Columns)
+            foreach (var col in table.Columns)
             {
                 sb.AppendFormat("{0},", col.ToString());
 
             }
-            sb.Replace(",", Environment.NewLine, sb.Length -1, 1);
+            sb.Replace(",", Environment.NewLine, sb.Length - 1, 1);
 
             foreach (DataRow dr in table.Rows)
             {
-               
-                foreach(var column in dr.ItemArray)
+
+                foreach (var column in dr.ItemArray)
                 {
                     sb.AppendFormat("\"{0}\",", column.ToString());
                 }
