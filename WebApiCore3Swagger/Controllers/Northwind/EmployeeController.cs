@@ -24,7 +24,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
     [ApiController]
     [ApiVersion("3.1")]
     // [Authorize(AuthenticationSchemes = "BasicAuthentication")]
-   [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+ //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     // [Authorize(Roles = "Admin")]
     public class EmployeeController : ControllerBase
     {

@@ -22,6 +22,7 @@ namespace WebApiCore3Swagger.Installer
             });
 
             var csvFormatterOptions = new CsvFormatterOptions();
+            csvFormatterOptions.CsvDelimiter = ",";
             services.AddControllers(options =>
             {
                 options.OutputFormatters.Add(new CsvOutputFormatter(csvFormatterOptions));

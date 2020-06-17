@@ -16,11 +16,11 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
     public class NorthwindRepository : INorthwindRepository
     {
         private readonly NorthwindContext context;
-       
+
         public NorthwindRepository(NorthwindContext context)
         {
             this.context = context;
-            
+
         }
         public async Task<IEnumerable<ResponseEmployee>> GetAllAsyncEmployees()
         {
@@ -39,7 +39,7 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
                 HomePhone = e.HomePhone
 
             }).ToListAsync();
-           
+
 
             return val;
 
@@ -49,20 +49,21 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
         {
 
 
-            var val = await context.Employees.Select(e => new ResponseEmployee {
-                 EmployeeId = e.EmployeeId,
-                 Title = e.Title,
-                 FirstName = e.FirstName,
-                 LastName = e.LastName,
-                 Address = e.Address,
-                 City = e.City,
-                 PostalCode = e.PostalCode,
-                 Country = e.Country,
-                 Region = e.Region,
-                 HomePhone = e.HomePhone
-                  
+            var val = await context.Employees.Select(e => new ResponseEmployee
+            {
+                EmployeeId = e.EmployeeId,
+                Title = e.Title,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Address = e.Address,
+                City = e.City,
+                PostalCode = e.PostalCode,
+                Country = e.Country,
+                Region = e.Region,
+                HomePhone = e.HomePhone
+
             }).ToListAsync();
-         
+
             DataTable table = GetEmployeeDataTable(val);
             string JsonString = string.Empty;
             if (table.Rows.Count > 0)
@@ -107,6 +108,11 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
             column.DataType = typeof(string);
             table.Columns.Add(column);
 
+            column = new DataColumn();
+            column.ColumnName = nameof(ResponseEmployee.Region);
+            column.DataType = typeof(string);
+            table.Columns.Add(column);
+
             DataRow row = null;
 
             foreach (var item in memployees)
@@ -117,6 +123,7 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
                 row[nameof(ResponseEmployee.LastName)] = item.LastName;
                 row[nameof(ResponseEmployee.Title)] = item.Title;
                 row[nameof(ResponseEmployee.Address)] = item.Address;
+                row[nameof(ResponseEmployee.Region)] = item.Region;
 
                 table.Rows.Add(row);
             }
@@ -127,68 +134,69 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
 
         public async Task<IEnumerable<ResponseOrder>> GetAllOrders()
         {
-            var orders = await context.Orders.Select(o=> new ResponseOrder {
-                 OrderId = o.OrderId,
-                 ShipAddress = o.ShipAddress,
-                 ShipCity = o.ShipCity,
-                 ShipPostalCode = o.ShipPostalCode,
-                 ShipRegion = o.ShipRegion,
-                 ShipCountry = o.ShipCountry,
-                 ShipName = o.ShipName,
-                 ShippedDate = o.ShippedDate,
-                 Freight = o.Freight,
-                  OrderDate = o.OrderDate,
-                   RequiredDate = o.RequiredDate
+            var orders = await context.Orders.Select(o => new ResponseOrder
+            {
+                OrderId = o.OrderId,
+                ShipAddress = o.ShipAddress,
+                ShipCity = o.ShipCity,
+                ShipPostalCode = o.ShipPostalCode,
+                ShipRegion = o.ShipRegion,
+                ShipCountry = o.ShipCountry,
+                ShipName = o.ShipName,
+                ShippedDate = o.ShippedDate,
+                Freight = o.Freight,
+                OrderDate = o.OrderDate,
+                RequiredDate = o.RequiredDate
             }).ToListAsync();
 
-           
+
 
             return orders;
         }
 
         public async Task<ResponseEmployee> GetAsyncEmployee(int id)
         {
-           
-                var val = await context.Employees.Select(e => new ResponseEmployee
-                {
-                    EmployeeId = e.EmployeeId,
-                    Title = e.Title,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    Address = e.Address,
-                    City = e.City,
-                    PostalCode = e.PostalCode,
-                    Country = e.Country,
-                    Region = e.Region,
-                    HomePhone = e.HomePhone
 
-                }).FirstOrDefaultAsync(e => e.EmployeeId == id);
-               
-                return val;
+            var val = await context.Employees.Select(e => new ResponseEmployee
+            {
+                EmployeeId = e.EmployeeId,
+                Title = e.Title,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Address = e.Address,
+                City = e.City,
+                PostalCode = e.PostalCode,
+                Country = e.Country,
+                Region = e.Region,
+                HomePhone = e.HomePhone
+
+            }).FirstOrDefaultAsync(e => e.EmployeeId == id);
+
+            return val;
 
         }
 
         public async Task<string> GetAllXmlStringEmployeesAsync()
         {
 
-        
-                var val = await context.Employees.Select(e => new ResponseEmployee
-                {
-                    EmployeeId = e.EmployeeId,
-                    Title = e.Title,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    Address = e.Address,
-                    City = e.City,
-                    PostalCode = e.PostalCode,
-                    Country = e.Country,
-                    Region = e.Region,
-                    HomePhone = e.HomePhone
 
-                }).ToListAsync();
-               
-               
-         
+            var val = await context.Employees.Select(e => new ResponseEmployee
+            {
+                EmployeeId = e.EmployeeId,
+                Title = e.Title,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Address = e.Address,
+                City = e.City,
+                PostalCode = e.PostalCode,
+                Country = e.Country,
+                Region = e.Region,
+                HomePhone = e.HomePhone
+
+            }).ToListAsync();
+
+
+
 
             DataTable table = GetEmployeeDataTable(val);
             string xmlstr = string.Empty;
@@ -223,23 +231,23 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
         {
             StringBuilder sb = new StringBuilder();
 
-          
-                var val = await context.Employees.Select(e => new ResponseEmployee
-                {
-                    EmployeeId = e.EmployeeId,
-                    Title = e.Title,
-                    FirstName = e.FirstName,
-                    LastName = e.LastName,
-                    Address = e.Address,
-                    City = e.City,
-                    PostalCode = e.PostalCode,
-                    Country = e.Country,
-                    Region = e.Region,
-                    HomePhone = e.HomePhone
 
-                }).ToListAsync();
-               
-              
+            var val = await context.Employees.Select(e => new ResponseEmployee
+            {
+                EmployeeId = e.EmployeeId,
+                Title = e.Title,
+                FirstName = e.FirstName,
+                LastName = e.LastName,
+                Address = e.Address,
+                City = e.City,
+                PostalCode = e.PostalCode,
+                Country = e.Country,
+                Region = e.Region,
+                HomePhone = e.HomePhone
+
+            }).ToListAsync();
+
+
 
             DataTable table = GetEmployeeDataTable(val);
             //Create the header
@@ -255,7 +263,32 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
 
                 foreach (var column in dr.ItemArray)
                 {
-                    sb.AppendFormat("\"{0}\",", column.ToString());
+                    string _val = string.Empty;
+                    if (column != null)
+                    {
+                        _val = column.ToString();
+                        //replace single qoutes in value with double quotes to escape the quotes
+                        _val = _val.Replace("\"", "\"\"");
+                        //Check is the value contains a delimiter and replace it in quotes
+                        if (_val.Contains(","))
+                        {
+                            _val = string.Format("\"{0}\"", _val);
+                        }
+
+                        if (_val.Contains("\r"))
+                        {
+                            _val = _val.Replace("\r", " ");
+                        }
+                        if (_val.Contains("\n"))
+                        {
+                            _val = _val.Replace("\n", " ");
+                        }
+
+
+
+                    }
+
+                    sb.AppendFormat("{0},", _val);
                 }
 
                 sb.Replace(",", Environment.NewLine, sb.Length - 1, 1);
