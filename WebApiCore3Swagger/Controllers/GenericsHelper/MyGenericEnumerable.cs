@@ -9,14 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace ConsoleApp1
+namespace WebApiCore3Swagger.GenericsHelper
 {
     /// <summary>
     /// This class object can return any delimited string fron an enumberable list of any objects,
     /// It also return a data table, xmlRoot element of a xml document and a json string
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MyGenericEnumerable<T>
+    public class MyGenericEnumerable<T> where T: class
     {
         private readonly string _tableName;
         private readonly string _tableNamespace;
@@ -34,7 +34,7 @@ namespace ConsoleApp1
 
         public string GetDelimitedString(IEnumerable<T> enumlist, char delimitor)
         {
-           
+
             StringBuilder sb = new StringBuilder();
             DataTable table = GetTable(enumlist);
             char localdelimitor = csvdelimitor;
@@ -59,7 +59,17 @@ namespace ConsoleApp1
                 {
                     if (isCsvDelimitor)
                     {
-                        sb.AppendFormat("\"{0}\"{1}", column.ToString(), localdelimitor);
+                        if ( column != null && column.ToString().Contains(","))
+                        {
+                            sb.AppendFormat("\"{0}\"{1}", column.ToString(), localdelimitor);
+                        }
+                        else
+                        {  
+                            sb.AppendFormat("{0}{1}", column.ToString(), localdelimitor);
+
+                        }
+
+
 
                     }
                     else
@@ -162,4 +172,3 @@ namespace ConsoleApp1
 
 
 
-       

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using EmployeeDB.Dal.Employee.DbRepository;
+﻿using EmployeeDB.Dal.Employee.DbRepository;
 using EmployeeDB.Dal.EmployeeDbResponseModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebApiCore3Swagger.GenericsHelper;
 using WebApiCore3Swagger.RedisCache.Attribs.Settings;
 
 namespace WebApiCore3Swagger.Controllers.EmployeeDb
@@ -16,7 +14,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
     /// <summary>
     /// Jwt authentication is required to access this controller
     /// </summary>
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("3.1")]
@@ -40,6 +38,13 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
         public async Task<ActionResult<IEnumerable<EmployeeDbResponse>>> GetallDbEmployees()
         {
             var results = await employeeDbRepository.GetEmployeeDbsAsync();
+            MyGenericEnumerable<EmployeeDbResponse> myGeneric = new MyGenericEnumerable<EmployeeDbResponse>();
+            var csvstr = myGeneric.GetDelimitedString(results, ',');
+            if(results == null || results.Count<EmployeeDbResponse>() == 0 )
+            {
+                return NotFound();
+            }
+
             return Ok(results);
         }
 

@@ -22,6 +22,7 @@ namespace WebApiCore3Swagger.Controllers
         public async Task<ActionResult<string>> Get()
         {
             var name = await Task.FromResult(User.Identity.Name);
+            var requestQueryUrl = string.Concat( Request.Scheme ,"://" , Request.Host.ToUriComponent(), Request.PathBase.ToUriComponent(), Request.Path.ToUriComponent());
 
           return Ok($"[value, value2, you name is: {name}]");
         }
