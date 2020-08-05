@@ -14,7 +14,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
     /// <summary>
     /// Jwt authentication is required to access this controller
     /// </summary>
-   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("3.1")]
@@ -99,7 +99,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
                 return NotFound("This employee could not be updated because it was not found");
             }
 
-            return result;
+            return Ok(result);
         }
 
         /// <summary>

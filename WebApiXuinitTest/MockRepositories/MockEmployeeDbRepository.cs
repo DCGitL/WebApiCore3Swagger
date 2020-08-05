@@ -48,9 +48,19 @@ namespace WebApiXuinitTest.MockRepositories
             return Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
         }
 
-        public Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee)
+        public async Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee)
         {
-            throw new NotImplementedException();
+            var existEmployee = dbemployees.FirstOrDefault(e => e.Id == DbEmployee.Id);
+            if (existEmployee != null)
+            {
+                existEmployee.FirstName = DbEmployee.FirstName;
+                existEmployee.LastName = DbEmployee.LastName;
+                existEmployee.Gender = DbEmployee.Gender;
+                existEmployee.Salary = DbEmployee.Salary;
+                
+            }
+
+            return await Task.FromResult(existEmployee);
         }
     }
 }

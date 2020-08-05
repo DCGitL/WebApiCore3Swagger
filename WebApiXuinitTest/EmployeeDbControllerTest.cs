@@ -2,9 +2,7 @@
 using EmployeeDB.Dal.EmployeeDbResponseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Update;
 using Moq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,7 +25,8 @@ namespace WebApiXuinitTest
         {
             //Arrange 
        
-            var dbEmployees = new MockEmployeeDbRepository().GetEmployeeDbsAsync();
+            var mockRepository = new MockEmployeeDbRepository();
+            var dbEmployees = mockRepository.GetEmployeeDbsAsync();
             mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).Returns(dbEmployees);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
@@ -116,6 +115,97 @@ namespace WebApiXuinitTest
             var createdEmployee = objectResult.Value as EmployeeDbResponse;
             Assert.NotNull(createdEmployee);
             Assert.Equal(expectedLink, location, ignoreCase: true);
+        }
+
+
+        [Fact]
+        public async Task DeletDbEmployee()
+        {
+            var employeeid = 1;
+            //Arrange
+            var mockRepository = new MockEmployeeDbRepository();
+            var returnval =   mockRepository.DeleteEmployeeDbAsync(employeeid);
+            mockDbEmployees.Setup(e => e.DeleteEmployeeDbAsync(employeeid)).Returns(returnval);
+
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            //Act
+
+            var result = await employeeDbController.DeleteDbEmployee(employeeid);
+
+            //Assert
+            Assert.NotNull(result);
+            var objectResult = Assert.IsType<OkObjectResult>(result.Result);
+            var statuscode = objectResult.StatusCode;
+            Assert.Equal(200, statuscode);
+            var val =  objectResult.Value == null? string.Empty : objectResult.Value.ToString();
+            Assert.Equal("Record successfully deleted", val, ignoreCase: true);
+        }
+
+
+        [Fact]
+        public async Task UpdateDbEmployee()
+        {
+            //Arrange
+            EmployeeDbResponse emp = new EmployeeDbResponse
+            {
+                Id = 1,
+                FirstName = "David",
+                LastName = "Chen",
+                Gender = "Male",
+                Salary = 100000.90m
+            };
+            var mockRepository = new MockEmployeeDbRepository();
+            var returnval = mockRepository.UpdateEmployeDbAsync(emp);
+            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
+
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+
+            //Act
+
+            var result = await employeeDbController.UpdateDbEmployee(emp);
+
+
+            //Assert
+            Assert.NotNull(result);
+            var objectResult = Assert.IsType<OkObjectResult>(result.Result);
+            var statuscode = objectResult.StatusCode;
+            Assert.Equal(200, statuscode);
+            var returnResult = objectResult.Value as EmployeeDbResponse;
+            Assert.NotNull(returnResult);
+            Assert.Equal("David", returnResult.FirstName);
+            Assert.Equal("Chen", returnResult.LastName);
+            Assert.Equal("Male", returnResult.Gender);
+            Assert.Equal(100000.90m, returnResult.Salary);
+        }
+
+        
+        [Fact]
+        public async Task UpdateDbEmployee_NotFound()
+        {
+            //Arrange
+            EmployeeDbResponse emp = new EmployeeDbResponse
+            {
+                Id = 6,
+                FirstName = "David",
+                LastName = "Chen",
+                Gender = "Male",
+                Salary = 100000.90m
+            };
+            var mockRepository = new MockEmployeeDbRepository();
+            var returnval = mockRepository.UpdateEmployeDbAsync(emp);
+            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
+
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+
+            //Act
+            var result = await employeeDbController.UpdateDbEmployee(emp);
+
+
+            //Assert
+            Assert.NotNull(result);
+            var objectNotResult = Assert.IsType<NotFoundObjectResult>(result.Result);
+            var statuscode = objectNotResult.StatusCode;
+            Assert.Equal(404, statuscode);
         }
     }
 }
