@@ -14,7 +14,9 @@ using WebApiCore3Swagger.Authentication.Basic;
 using WebApiCore3Swagger.Authorizations;
 using WebApiCore3Swagger.CustomRouteConstraint;
 using WebApiCore3Swagger.Installer;
+using WebApiCore3Swagger.Middleware;
 using WebApiCore3Swagger.Services.Auth.ServiceExtension;
+
 
 namespace WebApiCore3Swagger
 {
@@ -128,6 +130,8 @@ namespace WebApiCore3Swagger
                 options.DefaultApiVersion = new ApiVersion(3, 2);
                 options.AssumeDefaultVersionWhenUnspecified = true;
             });
+            
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -146,14 +150,15 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
-          
-          //  app.UseJwtTokenExpirationMiddleware();
 
+            //  app.UseJwtTokenExpirationMiddleware();
+            // register middleware
+            app.UseHeaderKeyToken();
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-
+            
 
             app.UseSwagger();
             app.UseSwaggerUI(s =>
@@ -166,7 +171,7 @@ namespace WebApiCore3Swagger
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+          
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

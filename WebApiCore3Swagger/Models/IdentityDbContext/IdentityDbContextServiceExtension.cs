@@ -8,8 +8,10 @@ namespace WebApiCore3Swagger.Models.IdentityDbContext
     public static class IdentityDbContextServiceExtension
     {
         public static void AddIdentityServiceExtension(this IServiceCollection services, IConfiguration configuration)
+
         {
-            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("EmployeeDbStore")));
+            var connectionstring = configuration.GetConnectionString("EmployeeDbStore");
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(connectionstring));
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
