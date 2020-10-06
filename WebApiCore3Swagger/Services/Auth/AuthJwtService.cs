@@ -33,21 +33,33 @@ namespace WebApiCore3Swagger.Services.Auth
         }
         public async Task<ResponseAuth> AsyncAuthenticate(string userName, string password)
         {
-            bool isUserValid = false;
-            var appUser = await userManager.FindByNameAsync(userName);
-            if(appUser != null && await userManager.CheckPasswordAsync(appUser, password))
+            try
             {
-                isUserValid = true;
+                bool isUserValid = false;
+                var appUser = await userManager.FindByNameAsync(userName);
+                if (appUser != null && await userManager.CheckPasswordAsync(appUser, password))
+                {
+                    isUserValid = true;
+                }
+
+                if (!isUserValid)
+                {
+                    return null;
+                }
+
+                var tokenResult = await CreateJwtTokenAsync(appUser);
+
+                return tokenResult;
+
+
             }
-           
-            if(!isUserValid)
+            catch(Exception ex)
             {
-                return null;
+                Console.WriteLine(ex.Message);
+                throw ex;
             }
-
-            var tokenResult = await CreateJwtTokenAsync(appUser);
-
-            return tokenResult;
+ 
+          
         }
 
 
