@@ -58,9 +58,5 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DiscoverRouting\" />
-  </ItemGroup>
-
 
 </Project>
