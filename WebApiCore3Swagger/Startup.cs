@@ -166,6 +166,7 @@ namespace WebApiCore3Swagger
                 s.SwaggerEndpoint("/swagger/v3.1/swagger.json", "v3.1");
 
                 s.SwaggerEndpoint("/swagger/v2.2/swagger.json", "v2.2");
+                s.RoutePrefix = string.Empty;
             });
 
             app.UseAuthentication();
