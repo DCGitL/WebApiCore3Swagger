@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebApiCore3Swagger.Middleware;
 using WebApiCore3Swagger.Models.Auth;
 
 namespace WebApiCore3Swagger.Controllers
@@ -23,8 +24,10 @@ namespace WebApiCore3Swagger.Controllers
         {
             var name = await Task.FromResult(User.Identity.Name);
             var requestQueryUrl = string.Concat( Request.Scheme ,"://" , Request.Host.ToUriComponent(), Request.PathBase.ToUriComponent(), Request.Path.ToUriComponent());
+            var keyval = HttpContext.Items[HeaderKeyToken.HeaderTokenKey];
+            
 
-          return Ok($"[value, value2, you name is: {name}]");
+          return Ok($"[value, value2, you name is: {name}, endpointkey is : {keyval}]");
         }
 
         /// <summary>
