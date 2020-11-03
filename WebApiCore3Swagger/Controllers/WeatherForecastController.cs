@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,12 @@ namespace WebApiCore3Swagger.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IMemoryCache cache;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IMemoryCache cache)
         {
             _logger = logger;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -30,13 +34,31 @@ namespace WebApiCore3Swagger.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            object cacheKey = "WeatherKey";
+
+            IEnumerable<WeatherForecast> returnvalue;
+            if(!cache.TryGetValue<IEnumerable<WeatherForecast>>(cacheKey, out returnvalue))
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
+                // Key not in cache, so get data
+                returnvalue =  Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateTime.Now.AddDays(index),
+                    TemperatureC = rng.Next(-20, 55),
+                    Summary = Summaries[rng.Next(Summaries.Length)]
+                })
             .ToArray();
+
+                // set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                   // keep in cache for this time, reset time if accessed.
+                   .SetSlidingExpiration(TimeSpan.FromSeconds(10));
+
+                //save data in cache
+                cache.Set("WeatherKey", returnvalue, cacheEntryOptions);
+
+            }
+           
+            return returnvalue;
         }
 
         [HttpGet]
