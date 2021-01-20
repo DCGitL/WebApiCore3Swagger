@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiCore3Swagger.Models.Auth;
@@ -35,18 +36,14 @@ namespace WebApiCore3Swagger.Services.Auth
         {
             try
             {
-                bool isUserValid = false;
+               
                 var appUser = await userManager.FindByNameAsync(userName);
-                if (appUser != null && await userManager.CheckPasswordAsync(appUser, password))
-                {
-                    isUserValid = true;
-                }
-
-                if (!isUserValid)
+                if (appUser == null && !await userManager.CheckPasswordAsync(appUser, password))
                 {
                     return null;
                 }
 
+                
                 var tokenResult = await CreateJwtTokenAsync(appUser);
 
                 return tokenResult;
@@ -70,8 +67,10 @@ namespace WebApiCore3Swagger.Services.Auth
             var appUserRoles = await userManager.GetRolesAsync(appUser);
 
             var tokenHandler = new JwtSecurityTokenHandler();
+            var certificate = new X509Certificate2(appConfigSettings.Value.PrivateKeyLocation, "abc12345");
 
-            var key = Encoding.ASCII.GetBytes(appConfigSettings.Value.JwtTokenSecret);
+
+            var key =  new X509SecurityKey(certificate) ; //Encoding.ASCII.GetBytes(appConfigSettings.Value.JwtTokenSecret);
 
            
                 DateTime today = DateTime.UtcNow;
@@ -105,7 +104,7 @@ namespace WebApiCore3Swagger.Services.Auth
                 Expires = TokenExpiration,
                 Audience = "http://my.audience.com",
                 Issuer = "http://tokenissuer.com",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha384Signature)     //(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
 
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);

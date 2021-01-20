@@ -3,6 +3,9 @@ using EmployeeDB.Dal.EmployeeDbResponseModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Fluent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,10 +24,13 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
     public class EmployeeDbController : ControllerBase
     {
         private readonly IEmployeeDbRepository employeeDbRepository;
-
-        public EmployeeDbController(IEmployeeDbRepository employeeDbRepository)
+        private readonly ILogger<EmployeeDbController> logger;
+        private Logger logManager;
+        public EmployeeDbController(IEmployeeDbRepository employeeDbRepository, ILogger<EmployeeDbController> logger)
         {
             this.employeeDbRepository = employeeDbRepository;
+            this.logger = logger;
+            logManager = LogManager.GetCurrentClassLogger();
         }
 
     
@@ -37,6 +43,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
         [RedisCached(60)]
         public async Task<ActionResult<IEnumerable<EmployeeDbResponse>>> GetallDbEmployees()
         {
+            var user = User.Identity.Name;
             var results = await employeeDbRepository.GetEmployeeDbsAsync();
             MyGenericEnumerable<EmployeeDbResponse> myGeneric = new MyGenericEnumerable<EmployeeDbResponse>();
             var csvstr = myGeneric.GetDelimitedString(results, ',');
@@ -44,7 +51,9 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
             {
                 return NotFound();
             }
-
+            LogEventInfo theEvent = new LogEventInfo(NLog.LogLevel.Info, nameof(GetallDbEmployees), $"{results.Count<EmployeeDbResponse>()} requested");
+            theEvent.Properties["UserName"] = user;
+            logManager.Log(theEvent);
             return Ok(results);
         }
 
@@ -79,6 +88,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
             var url = string.Concat(Request.Scheme, "://", Request.Host.ToUriComponent(), Request.PathBase.ToUriComponent(), Request.Path.ToUriComponent());
             var uri = url.Replace(nameof(CreateEmployee), nameof(GetDbEmployee));
             var val = Created($"{uri}/{result.Id}", result);
+           
 
             return val;
         }
