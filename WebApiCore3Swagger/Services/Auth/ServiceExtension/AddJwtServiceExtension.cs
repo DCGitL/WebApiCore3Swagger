@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WebApiCore3Swagger.Services.Auth.ServiceExtension
 {
@@ -12,12 +16,15 @@ namespace WebApiCore3Swagger.Services.Auth.ServiceExtension
         {
             var jwtsecret = configuration.GetSection("AppSetting");
             var appsetting = jwtsecret.Get<AppSetting>();
-            var key = Encoding.ASCII.GetBytes(appsetting.JwtTokenSecret);
+            var publiccertificatepath = appsetting.PublicKeyLocation;
+            var certificate = new X509Certificate2(publiccertificatepath);
+
+            var key = new X509SecurityKey(certificate);  // Encoding.ASCII.GetBytes(appsetting.JwtTokenSecret);
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = key, // new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateLifetime = true,
@@ -34,12 +41,39 @@ namespace WebApiCore3Swagger.Services.Auth.ServiceExtension
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-           .AddJwtBearer(x =>
+           .AddJwtBearer(configOptions =>
            {
-               x.RequireHttpsMetadata = false;
-               x.SaveToken = true;
-               x.TokenValidationParameters = tokenValidationParameters;
+               configOptions.Events = new JwtBearerEvents()
+               {
+                   OnMessageReceived = context =>
+                   {
+                       StringValues token;
+                       //extract the access token from the querystring if it is available
+                       if (context.Request.Query.ContainsKey("access_token"))
+                       {
+                           context.Token = context.Request.Query["access_token"];
+                       }
+
+                       if (context.Request.Headers.TryGetValue("Authorization", out token))
+                       {
+                           context.Token = token.ToString().Replace("Bearer ", "");
+                       }
+
+                       return Task.CompletedTask;
+                   }
+
+               };
+
+               configOptions.RequireHttpsMetadata = false;
+               configOptions.SaveToken = true;
+               configOptions.TokenValidationParameters = tokenValidationParameters;
            });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //    .RequireAuthenticatedUser().Build();
+            //});
         }
     }
 }

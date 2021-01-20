@@ -33,7 +33,7 @@ namespace WebApiCore3Swagger.Middleware.JwtToken
                     if (tokenval.Length == 2)
                     {
                         var jwttokenParameters = httpContext.RequestServices.GetRequiredService<TokenValidationParameters>();
-
+                
                         var jwtToken = tokenval[1];
                         bool isTokenExpired = ValidateJwtTokenExpirationTime(jwttokenParameters, jwtToken);
                         if (isTokenExpired)

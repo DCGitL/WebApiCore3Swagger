@@ -9,5 +9,8 @@ namespace WebApiCore3Swagger.Services.Auth
     {
         public string JwtTokenSecret { get; set; }
         public TimeSpan TokenLifeTime { get; set; }
+        public string PublicKeyLocation { get; set; }
+
+        public string PrivateKeyLocation { get; set; }
     }
 }

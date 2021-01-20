@@ -298,5 +298,20 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
 
             return sb.ToString();
         }
+
+        public async Task<IEnumerable<ResponseCustomerOrdTotals>> GetCustomersOrderTotals()
+        {
+            var result = await (from a in context.Orders
+                         join b in context.OrderDetails on a.OrderId equals b.OrderId
+                         group b by a.CustomerId into groupOrders
+                         select new ResponseCustomerOrdTotals
+                         {   
+                             CustomerID = groupOrders.Key,
+                             OrderTotal = groupOrders.Sum(o => (o.UnitPrice * o.Quantity))
+                         }).ToListAsync();
+
+            return result;
+
+        }
     }
 }

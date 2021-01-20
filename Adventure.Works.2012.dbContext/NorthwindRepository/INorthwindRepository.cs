@@ -16,5 +16,6 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
 
         Task<string> GetAllCSVStringEmployeesAsync();
         Task<IEnumerable<ResponseOrder>> GetAllOrders();
+        Task<IEnumerable<ResponseCustomerOrdTotals>> GetCustomersOrderTotals();
     }
 }

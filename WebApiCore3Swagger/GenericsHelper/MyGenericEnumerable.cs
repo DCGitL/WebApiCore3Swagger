@@ -16,7 +16,7 @@ namespace ConsoleApp1
     /// It also return a data table, xmlRoot element of a xml document and a json string
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MyGenericEnumerable<T>
+    public class MyGenericEnumerable<T> where T : class, new()
     {
         private readonly string _tableName;
         private readonly string _tableNamespace;

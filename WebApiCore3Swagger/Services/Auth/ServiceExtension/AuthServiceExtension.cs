@@ -17,6 +17,8 @@ namespace WebApiCore3Swagger.Services.Auth.ServiceExtension
             {
                 options.JwtTokenSecret = result.JwtTokenSecret;
                 options.TokenLifeTime = result.TokenLifeTime;
+                options.PrivateKeyLocation = result.PrivateKeyLocation;
+                options.PublicKeyLocation = result.PublicKeyLocation;
             });
 
 

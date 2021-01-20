@@ -15,6 +15,7 @@ using WebApiCore3Swagger.Authorizations;
 using WebApiCore3Swagger.CustomRouteConstraint;
 using WebApiCore3Swagger.Installer;
 using WebApiCore3Swagger.Middleware;
+using WebApiCore3Swagger.Middleware.JwtToken;
 using WebApiCore3Swagger.Services.Auth.ServiceExtension;
 
 
@@ -130,7 +131,12 @@ namespace WebApiCore3Swagger
                 options.DefaultApiVersion = new ApiVersion(3, 2);
                 options.AssumeDefaultVersionWhenUnspecified = true;
             });
-            
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
             
         }
 
@@ -150,9 +156,10 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
+           // register middleware
 
-            //  app.UseJwtTokenExpirationMiddleware();
-            // register middleware
+            app.UseJwtTokenExpirationMiddleware();
+         
             app.UseHeaderKeyToken();
             app.UseHttpsRedirection();
 
