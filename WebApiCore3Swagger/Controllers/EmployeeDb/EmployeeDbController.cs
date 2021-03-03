@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore3Swagger.GenericsHelper;
+using WebApiCore3Swagger.NLogger;
 using WebApiCore3Swagger.RedisCache.Attribs.Settings;
 
 namespace WebApiCore3Swagger.Controllers.EmployeeDb
@@ -25,12 +26,13 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
     {
         private readonly IEmployeeDbRepository employeeDbRepository;
         private readonly ILogger<EmployeeDbController> logger;
-        private Logger logManager;
-        public EmployeeDbController(IEmployeeDbRepository employeeDbRepository, ILogger<EmployeeDbController> logger)
+        private readonly ICustomNlogProperties loggerProperty;
+
+        public EmployeeDbController(IEmployeeDbRepository employeeDbRepository, ILogger<EmployeeDbController> logger, ICustomNlogProperties loggerProperty)
         {
             this.employeeDbRepository = employeeDbRepository;
             this.logger = logger;
-            logManager = LogManager.GetCurrentClassLogger();
+            this.loggerProperty = loggerProperty;
         }
 
     
@@ -51,9 +53,14 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
             {
                 return NotFound();
             }
-            LogEventInfo theEvent = new LogEventInfo(NLog.LogLevel.Info, nameof(GetallDbEmployees), $"{results.Count<EmployeeDbResponse>()} requested");
-            theEvent.Properties["UserName"] = user;
-            logManager.Log(theEvent);
+        
+            loggerProperty.LogProperty(new CustomProperty
+            {
+                Level = NLog.LogLevel.Info,
+                UserName = user,
+                LoggerName = $"{nameof(EmployeeDbController)}/{ nameof(GetallDbEmployees)}",
+                Message = $"{results.Count<EmployeeDbResponse>()} employees requested"
+            });
             return Ok(results);
         }
 

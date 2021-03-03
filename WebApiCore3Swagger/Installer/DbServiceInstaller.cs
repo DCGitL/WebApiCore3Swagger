@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TestLib.InstallService;
 using WebApiCore3Swagger.Models.IdentityDbContext;
+using WebApiCore3Swagger.NLogger;
 
 namespace WebApiCore3Swagger.Installer
 {
@@ -23,6 +24,8 @@ namespace WebApiCore3Swagger.Installer
 
             //EmployeeDb Service Installer
             services.AddEmployeeDbExtension(configuration);
+
+            services.AddTransient<ICustomNlogProperties, CustomNlogProperties>();
         }
     }
 }
