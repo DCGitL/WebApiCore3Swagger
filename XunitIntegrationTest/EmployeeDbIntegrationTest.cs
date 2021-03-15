@@ -1,10 +1,6 @@
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using WebApiCore3Swagger;
 using Xunit;
 
 namespace XunitIntegrationTest

@@ -1,9 +1,7 @@
 ﻿using EmployeeDB.Dal.Employee.DbRepository;
 using EmployeeDB.Dal.EmployeeDbResponseModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebApiXuinitTest.MockRepositories
