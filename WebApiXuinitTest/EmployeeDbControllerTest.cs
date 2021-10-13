@@ -36,8 +36,8 @@ namespace WebApiXuinitTest
             //Arrange 
        
             var mockRepository = new MockEmployeeDbRepository();
-            var dbEmployees = mockRepository.GetEmployeeDbsAsync();
-            mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).Returns(dbEmployees);
+            var dbEmployees = await mockRepository.GetEmployeeDbsAsync();
+             mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).ReturnsAsync(dbEmployees);
            
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             
@@ -63,8 +63,8 @@ namespace WebApiXuinitTest
         {
             var employeeid = 1;
             //Arrange 
-            var dbEmployee =  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid);
-            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid)).Returns(dbEmployee);
+            var dbEmployee = await  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid);
+            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid)).ReturnsAsync(dbEmployee);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
              
@@ -87,6 +87,7 @@ namespace WebApiXuinitTest
         [Fact]
         public async Task CreateDbEmployee()
         {
+            //Arrange
             EmployeeDbResponse emp = new EmployeeDbResponse
             {
                 Id = 4,
@@ -96,9 +97,9 @@ namespace WebApiXuinitTest
                 Salary = 8500.90m
             };
 
-            //Arrange
-            var dbEmployee = new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp);
-            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp)).Returns(dbEmployee);
+            
+            var dbEmployee = await new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp);
+            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp)).ReturnsAsync(dbEmployee);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             var expectedLink = "http://localHost/api/v3.1/EmployeeDb/GetDbEmployee/4";

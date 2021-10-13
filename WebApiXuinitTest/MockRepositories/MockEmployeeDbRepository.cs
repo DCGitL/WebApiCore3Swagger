@@ -41,9 +41,9 @@ namespace WebApiXuinitTest.MockRepositories
             return await Task.FromResult(employee);
         }
 
-        public  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync()
+        public async  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync()
         {
-            return Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
+            return await Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
         }
 
         public async Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee)

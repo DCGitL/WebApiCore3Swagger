@@ -1,9 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApiCore3Swagger.RedisCache.Attribs.Settings;
 using WebApiCore3Swagger.RedisCacheServices;
 
