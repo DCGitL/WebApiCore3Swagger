@@ -2,11 +2,14 @@
 using EmployeeDB.Dal.EmployeeDbResponseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore3Swagger.Controllers.EmployeeDb;
+using WebApiCore3Swagger.NLogger;
 using WebApiXuinitTest.MockRepositories;
 using Xunit;
 
@@ -14,10 +17,17 @@ namespace WebApiXuinitTest
 {
     public class EmployeeDbControllerTest
     {
-        private readonly Mock<IEmployeeDbRepository> mockDbEmployees; 
+        private readonly Mock<IEmployeeDbRepository> mockDbEmployees;
+        private readonly ILogger<EmployeeDbController> loggerMock;
+        private readonly ICustomNlogProperties factorycustLog;
         public EmployeeDbControllerTest()
         {
             mockDbEmployees = new Mock<IEmployeeDbRepository>();
+            loggerMock = Mock.Of<ILogger<EmployeeDbController>>();
+            var serviceProvider = new ServiceCollection()
+               .AddSingleton<ICustomNlogProperties, CustomNlogProperties>()
+               .BuildServiceProvider();
+            factorycustLog = serviceProvider.GetService<ICustomNlogProperties>();
         }
 
         [Fact]
@@ -26,10 +36,11 @@ namespace WebApiXuinitTest
             //Arrange 
        
             var mockRepository = new MockEmployeeDbRepository();
-            var dbEmployees = mockRepository.GetEmployeeDbsAsync();
-            mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).Returns(dbEmployees);
-
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var dbEmployees = await mockRepository.GetEmployeeDbsAsync();
+             mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).ReturnsAsync(dbEmployees);
+           
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
+            
 
             //Act
           
@@ -52,10 +63,10 @@ namespace WebApiXuinitTest
         {
             var employeeid = 1;
             //Arrange 
-            var dbEmployee =  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid);
-            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid)).Returns(dbEmployee);
+            var dbEmployee = await  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid);
+            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid)).ReturnsAsync(dbEmployee);
 
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
              
 
             //Act 
@@ -76,6 +87,7 @@ namespace WebApiXuinitTest
         [Fact]
         public async Task CreateDbEmployee()
         {
+            //Arrange
             EmployeeDbResponse emp = new EmployeeDbResponse
             {
                 Id = 4,
@@ -85,11 +97,11 @@ namespace WebApiXuinitTest
                 Salary = 8500.90m
             };
 
-            //Arrange
-            var dbEmployee = new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp);
-            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp)).Returns(dbEmployee);
+            
+            var dbEmployee = await new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp);
+            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp)).ReturnsAsync(dbEmployee);
 
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             var expectedLink = "http://localHost/api/v3.1/EmployeeDb/GetDbEmployee/4";
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Scheme = "http";
@@ -127,7 +139,7 @@ namespace WebApiXuinitTest
             var returnval =   mockRepository.DeleteEmployeeDbAsync(employeeid);
             mockDbEmployees.Setup(e => e.DeleteEmployeeDbAsync(employeeid)).Returns(returnval);
 
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             //Act
 
             var result = await employeeDbController.DeleteDbEmployee(employeeid);
@@ -158,7 +170,7 @@ namespace WebApiXuinitTest
             var returnval = mockRepository.UpdateEmployeDbAsync(emp);
             mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
 
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
 
             //Act
 
@@ -195,7 +207,7 @@ namespace WebApiXuinitTest
             var returnval = mockRepository.UpdateEmployeDbAsync(emp);
             mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
 
-            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object);
+            var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
 
             //Act
             var result = await employeeDbController.UpdateDbEmployee(emp);

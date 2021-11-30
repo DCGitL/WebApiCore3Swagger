@@ -1,9 +1,7 @@
 ﻿using EmployeeDB.Dal.Employee.DbRepository;
 using EmployeeDB.Dal.EmployeeDbResponseModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebApiXuinitTest.MockRepositories
@@ -43,9 +41,9 @@ namespace WebApiXuinitTest.MockRepositories
             return await Task.FromResult(employee);
         }
 
-        public  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync()
+        public async  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync()
         {
-            return Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
+            return await Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
         }
 
         public async Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee)

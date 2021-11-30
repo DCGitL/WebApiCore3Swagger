@@ -58,7 +58,7 @@ namespace WebApiCore3Swagger.Middleware.JwtToken
         private bool ValidateJwtTokenExpirationTime(TokenValidationParameters tokenParameters, string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-
+            
 
             try
             {

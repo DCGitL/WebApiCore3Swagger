@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 using System.Net.Mime;
 using WebApiCore3Swagger.Authentication.Basic;
 using WebApiCore3Swagger.Authorizations;
@@ -128,7 +131,7 @@ namespace WebApiCore3Swagger
             services.AddApiVersioning(options =>
             {
                 options.ReportApiVersions = true;
-                options.DefaultApiVersion = new ApiVersion(3, 2);
+                options.DefaultApiVersion = new ApiVersion(2, 2);
                 options.AssumeDefaultVersionWhenUnspecified = true;
             });
 
@@ -167,7 +170,14 @@ namespace WebApiCore3Swagger
 
             
 
-            app.UseSwagger();
+            app.UseSwagger(u => {
+                u.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+                {
+                    swaggerDoc.Servers = new List<OpenApiServer> { new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}", Description = env.EnvironmentName } };
+                    swaggerDoc.Extensions["x-cmdbid"] = new OpenApiString("2034");
+                });
+            
+            });
             app.UseSwaggerUI(s =>
             {
                 s.SwaggerEndpoint("/swagger/v3.1/swagger.json", "v3.1");

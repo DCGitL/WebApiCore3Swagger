@@ -18,9 +18,17 @@ namespace WebApiCore3Swagger.Installer
             //swagger
             services.AddSwaggerGen(g =>
             {
-                g.SwaggerDoc("v3.1", new OpenApiInfo { Title = "v3.1 Core web api", Description = "Swagger core api 3.1", Version = "v3.1" });
+                var contact = new OpenApiContact
+                {
+                    Email = "david.chen@gmail.com",
+                    Name = "David",
+                    Url = new Uri("http://www.goole.com")
+                };
+                g.SwaggerDoc("v3.1", new OpenApiInfo {
+                    Title = "v3.1 Core web api", Description = "Swagger core api 3.1", Version = "v3.1", Contact = contact });
 
-                g.SwaggerDoc("v2.2", new OpenApiInfo { Title = "v2.2 Core web api", Description = "Swagger core api 2.2", Version = "v2.2" });
+                g.SwaggerDoc("v2.2", new OpenApiInfo { 
+                    Title = "v2.2 Core web api", Description = "Swagger core api 2.2", Version = "v2.2", Contact = contact });
 
 
                 //g.OperationFilter<RemoveVersionFromParameter>();

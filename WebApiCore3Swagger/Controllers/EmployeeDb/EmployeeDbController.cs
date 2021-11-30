@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Fluent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -45,7 +43,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
         [RedisCached(60)]
         public async Task<ActionResult<IEnumerable<EmployeeDbResponse>>> GetallDbEmployees()
         {
-            var user = User.Identity.Name;
+            var user = User?.Identity?.Name;
             var results = await employeeDbRepository.GetEmployeeDbsAsync();
             MyGenericEnumerable<EmployeeDbResponse> myGeneric = new MyGenericEnumerable<EmployeeDbResponse>();
             var csvstr = myGeneric.GetDelimitedString(results, ',');
