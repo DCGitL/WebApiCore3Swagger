@@ -270,7 +270,7 @@ namespace WebApiCore3Swagger.Services.Auth
 
         private bool IsJWtWithValidSecurityAlgorithm(SecurityToken validatedToken)
         {
-            return (validatedToken is JwtSecurityToken jwtSecurityToken) && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
+            return (validatedToken is JwtSecurityToken jwtSecurityToken) && jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.RsaSha384, StringComparison.InvariantCultureIgnoreCase);
         }
 
     }
