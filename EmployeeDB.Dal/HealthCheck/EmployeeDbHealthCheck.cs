@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace EmployeeDB.Dal.HealthCheck
     public class EmployeeDbHealthCheck : IHealthCheck
     {
         private readonly string _sqlconnectionstr;
+        private const string testQuery = "Select 1 as val";
         public EmployeeDbHealthCheck(IConfiguration configuration)
         {
             _sqlconnectionstr = configuration.GetConnectionString("EmployeeDB");
@@ -20,17 +22,20 @@ namespace EmployeeDB.Dal.HealthCheck
             {
                 try
                 {
-                    conn.Open();
-                    var healthResult = HealthCheckResult.Healthy("Employee db is available");
-                    return await Task.FromResult(healthResult);
+                    await conn.OpenAsync(cancellationToken);
+                    var command = conn.CreateCommand();
+                    command.CommandText = testQuery;
+                    await command.ExecuteNonQueryAsync();
 
+                    var heathResult = HealthCheckResult.Healthy("North Wind Db is available");
+                    return heathResult;
                 }
-                catch (Exception ex)
+                catch (DbException ex)
                 {
-                    var healthResult = HealthCheckResult.Unhealthy("Employee db is available", ex);
-                    return await Task.FromResult(healthResult);
-
-
+                    var heathResult = new HealthCheckResult(status: context.Registration.FailureStatus,
+                        description:"Fail to access North wind db",
+                        exception: ex);
+                    return heathResult;
                 }
             }
         }

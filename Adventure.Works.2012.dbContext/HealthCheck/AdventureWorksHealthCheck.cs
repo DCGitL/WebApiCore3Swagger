@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Adventure.Works._2012.dbContext.HealthCheck
     public class AdventureWorksHealthCheck : IHealthCheck
     {
         private readonly string _sqlconnectionstr;
+        private const string testQuery = "Select 1 as val";
         public AdventureWorksHealthCheck(IConfiguration configuration)
         {
             _sqlconnectionstr = configuration.GetConnectionString("AdventureWorks");
@@ -21,17 +23,20 @@ namespace Adventure.Works._2012.dbContext.HealthCheck
             {
                 try
                 {
-                    conn.Open();
-                    var healthResult = HealthCheckResult.Healthy("Adventure db is available");
-                    return await Task.FromResult(healthResult);
+                    await conn.OpenAsync(cancellationToken);
+                    var command = conn.CreateCommand();
+                    command.CommandText = testQuery;
+                    await command.ExecuteNonQueryAsync();
 
+                    var heathResult = HealthCheckResult.Healthy("AdventureWorks Db is available");
+                    return heathResult;
                 }
-                catch (Exception ex)
+                catch (DbException ex)
                 {
-                    var healthResult = HealthCheckResult.Unhealthy("Adventure db is available", ex);
-                    return await Task.FromResult(healthResult);
-
-
+                    var heathResult = new HealthCheckResult(status: context.Registration.FailureStatus,
+                        description: "Fail to access AdventureWorks db",
+                        exception: ex);
+                    return heathResult;
                 }
             }
         }
