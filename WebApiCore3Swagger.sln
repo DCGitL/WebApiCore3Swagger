@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiCore3Swagger", "WebApiCore3Swagger\WebApiCore3Swagger.csproj", "{9213E17C-5CA4-485E-A648-CA5F0BAC9191}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeDB.Dal", "EmployeeD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiXuinitTest", "WebApiXuinitTest\WebApiXuinitTest.csproj", "{E841302D-D82B-4B96-8956-BE2130056968}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XunitIntegrationTest", "XunitIntegrationTest\XunitIntegrationTest.csproj", "{85EFEB3C-6C7B-4681-8CA8-3DFBC389D6B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XunitIntegrationTest", "XunitIntegrationTest\XunitIntegrationTest.csproj", "{85EFEB3C-6C7B-4681-8CA8-3DFBC389D6B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthChecker", "HealthChecker\HealthChecker.csproj", "{585D58B8-DCD9-42C2-8B7F-129CF6C8B3FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{85EFEB3C-6C7B-4681-8CA8-3DFBC389D6B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85EFEB3C-6C7B-4681-8CA8-3DFBC389D6B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85EFEB3C-6C7B-4681-8CA8-3DFBC389D6B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{585D58B8-DCD9-42C2-8B7F-129CF6C8B3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{585D58B8-DCD9-42C2-8B7F-129CF6C8B3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{585D58B8-DCD9-42C2-8B7F-129CF6C8B3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{585D58B8-DCD9-42C2-8B7F-129CF6C8B3FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

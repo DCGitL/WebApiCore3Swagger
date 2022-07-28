@@ -1,7 +1,9 @@
+using HealthChecks.UI.Client;
 using MessageManager.RegisterSerive;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -16,6 +18,7 @@ using System.Net.Mime;
 using WebApiCore3Swagger.Authentication.Basic;
 using WebApiCore3Swagger.Authorizations;
 using WebApiCore3Swagger.CustomRouteConstraint;
+using WebApiCore3Swagger.Health.ServiceExtensions;
 using WebApiCore3Swagger.Installer;
 using WebApiCore3Swagger.Middleware;
 using WebApiCore3Swagger.Middleware.JwtToken;
@@ -89,8 +92,8 @@ namespace WebApiCore3Swagger
             services.AddTransient<IAuthorizationHandler, CustomizedAuthorizationHandler>();
             //add my custom authorizaton policy
 
+            services.AddHealthCheckServices();
 
-           
 
 
             //add mailing serivce
@@ -189,9 +192,15 @@ namespace WebApiCore3Swagger
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+
+            });
           
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecksUI();
                 endpoints.MapControllers();
             });
 
