@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
+using WebApiCore3Swagger.Redis.HealthCheck;
 using WebApiCore3Swagger.RedisCache.Attribs.Settings;
 using WebApiCore3Swagger.RedisCacheServices;
 
@@ -17,8 +19,12 @@ namespace WebApiCore3Swagger.Installer
                 return;
             }
 
+            services.AddSingleton<IConnectionMultiplexer>(_=> ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
+
             services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
             services.AddSingleton<IResponseCacheService, ResponseRedisCacheServices>();
+            services.AddHealthChecks()
+                .AddCheck<RedisHealthCheck>(name: "Redis");
              
         }
     }
