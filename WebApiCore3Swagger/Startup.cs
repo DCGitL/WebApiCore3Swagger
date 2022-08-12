@@ -1,8 +1,11 @@
+using HealthChecks.UI.Client;
 using MessageManager.RegisterSerive;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Routing;
@@ -11,14 +14,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using WebApiCore3Swagger.Authentication.Basic;
 using WebApiCore3Swagger.Authorizations;
 using WebApiCore3Swagger.CustomRouteConstraint;
+using WebApiCore3Swagger.Health.ServiceExtensions;
 using WebApiCore3Swagger.Installer;
 using WebApiCore3Swagger.Middleware;
 using WebApiCore3Swagger.Middleware.JwtToken;
+using WebApiCore3Swagger.Models.HealthCheck;
 using WebApiCore3Swagger.Services.Auth.ServiceExtension;
 
 
@@ -89,8 +96,8 @@ namespace WebApiCore3Swagger
             services.AddTransient<IAuthorizationHandler, CustomizedAuthorizationHandler>();
             //add my custom authorizaton policy
 
+            services.AddHealthCheckServices();
 
-           
 
 
             //add mailing serivce
@@ -159,7 +166,33 @@ namespace WebApiCore3Swagger
                 app.UseExceptionHandler("/error");
             }
 
-           // register middleware
+            // setup health check pipeline endpoint
+            #region healthcheckJsonoutputUsingHealthUIInstead
+            //app.UseHealthChecks("/health", new HealthCheckOptions()
+            //{
+            //    ResponseWriter = async (context, report) =>
+            //    {
+            //        context.Response.ContentType = "application/json";
+            //        var response = new HealthCheckResponse()
+            //        {
+            //            Status = report.Status.ToString(),
+            //            Checks = report.Entries.Select(e => new HealthCheck()
+            //            {
+            //                Component = e.Key,
+            //                Status = e.Value.Status.ToString(),
+            //                Description = e.Value.Description,
+            //                ExceptionMessage = e.Value.Exception != null ? e.Value.Exception.Message : "none"
+
+            //            }),
+            //            Duration = report.TotalDuration
+            //        };
+
+            //        await context.Response.WriteAsync(text: JsonConvert.SerializeObject(response, Formatting.Indented));
+            //    }
+
+            //});
+            #endregion  healthcheckJsonoutputUsingHealthUIInstead
+            // register middleware
 
             app.UseJwtTokenExpirationMiddleware();
          
@@ -188,10 +221,16 @@ namespace WebApiCore3Swagger
 
             app.UseAuthentication();
             app.UseAuthorization();
+            //this end point is use for health check UI
+            app.UseHealthChecks("/health", new HealthCheckOptions()
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 
+            });
           
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecksUI();
                 endpoints.MapControllers();
             });
 

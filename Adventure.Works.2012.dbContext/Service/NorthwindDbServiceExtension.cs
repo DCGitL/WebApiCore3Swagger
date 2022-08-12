@@ -1,4 +1,5 @@
-﻿using Adventure.Works._2012.dbContext.Models;
+﻿using Adventure.Works._2012.dbContext.HealthCheck;
+using Adventure.Works._2012.dbContext.Models;
 using Adventure.Works._2012.dbContext.Northwind.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,6 @@ namespace Adventure.Works._2012.dbContext.Service
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connectionstring));
 
             services.AddScoped<INorthwindRepository, NorthwindRepository>();
-
            
         }
     }
