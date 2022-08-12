@@ -167,31 +167,32 @@ namespace WebApiCore3Swagger
             }
 
             // setup health check pipeline endpoint
-            app.UseHealthChecks("/health", new HealthCheckOptions()
-            {
-                ResponseWriter = async (context, report) =>
-                {
-                    context.Response.ContentType = "application/json";
-                    var response = new HealthCheckResponse()
-                    {
-                        Status = report.Status.ToString(),
-                        Checks = report.Entries.Select(e => new HealthCheck()
-                        {
-                            Component = e.Key,
-                            Status = e.Value.Status.ToString(),
-                            Description = e.Value.Description,
-                            ExceptionMessage = e.Value.Exception != null ? e.Value.Exception.Message : "none"
+            #region healthcheckJsonoutputUsingHealthUIInstead
+            //app.UseHealthChecks("/health", new HealthCheckOptions()
+            //{
+            //    ResponseWriter = async (context, report) =>
+            //    {
+            //        context.Response.ContentType = "application/json";
+            //        var response = new HealthCheckResponse()
+            //        {
+            //            Status = report.Status.ToString(),
+            //            Checks = report.Entries.Select(e => new HealthCheck()
+            //            {
+            //                Component = e.Key,
+            //                Status = e.Value.Status.ToString(),
+            //                Description = e.Value.Description,
+            //                ExceptionMessage = e.Value.Exception != null ? e.Value.Exception.Message : "none"
 
-                        }),
-                        Duration = report.TotalDuration
-                    };
+            //            }),
+            //            Duration = report.TotalDuration
+            //        };
 
-                    await context.Response.WriteAsync(text: JsonConvert.SerializeObject(response, Formatting.Indented));
-                }
+            //        await context.Response.WriteAsync(text: JsonConvert.SerializeObject(response, Formatting.Indented));
+            //    }
 
-            });
-
-           // register middleware
+            //});
+            #endregion  healthcheckJsonoutputUsingHealthUIInstead
+            // register middleware
 
             app.UseJwtTokenExpirationMiddleware();
          
@@ -220,7 +221,7 @@ namespace WebApiCore3Swagger
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            //this end point is use for health check UI
             app.UseHealthChecks("/health", new HealthCheckOptions()
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
