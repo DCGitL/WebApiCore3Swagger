@@ -17,9 +17,7 @@ namespace EmployeeDB.Dal.Service
             var connectionstring = configuration.GetConnectionString("EmployeeDB");
             services.AddDbContext<EmployeeDbContext>(options => options.UseSqlServer(connectionstring));
             services.AddScoped<IEmployeeDbRepository, EmployeeDbRepository>();
-            services.AddHealthChecks()
-                .AddCheck<EmployeeDbHealthCheck>(name: "EmployeeDB");
-
+          
             //auto mapper configurations
             var mappingConfig = new MapperConfiguration(mc =>
             {

@@ -15,9 +15,6 @@ namespace Adventure.Works._2012.dbContext.Service
             services.AddDbContext<NorthwindContext>(options => options.UseSqlServer(connectionstring));
 
             services.AddScoped<INorthwindRepository, NorthwindRepository>();
-            services.AddHealthChecks()
-                .AddCheck<AdventureWorksHealthCheck>(name: "AdventureWorks");
-
            
         }
     }
