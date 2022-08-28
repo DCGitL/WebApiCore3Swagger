@@ -16,7 +16,7 @@ namespace WebApiCore3Swagger.Controllers.EmployeeDb
     /// <summary>
     /// Jwt authentication is required to access this controller
     /// </summary>
-  //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [ApiVersion("3.1")]
