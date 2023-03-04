@@ -40,7 +40,7 @@ namespace WebApiCore3Swagger.Controllers
         /// <remarks>
         /// <font color="red">There are latitude and longitude restriction on locations</font> 
         /// </remarks>
-        [HttpGet, Route("GetLatLong/{Lat:LatLongContraint}/{Long}")]
+        [HttpGet, Route("GetLatLong/{Lat: LatLongContraint}/{Long}")]
         [MapToApiVersion("2.2")]
         public async Task<ActionResult<string>> GetLatLongResults(double Lat, double Long)
         {

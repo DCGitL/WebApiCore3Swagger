@@ -56,13 +56,34 @@ namespace WebApiCore3Swagger
                 });
 
             });
+            services.AddControllers( options =>
+            {
+                options.RespectBrowserAcceptHeader= true;
+                options.InputFormatters.Add(new XmlSerializerInputFormatter(options));
+                options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+            })
+                .AddNewtonsoftJson()          
+              .ConfigureApiBehaviorOptions(options =>
+              {
+                  //Global validation on posted objects with dataanotations.
+                  options.InvalidModelStateResponseFactory = context =>
+                  {
+                      var result = new BadRequestObjectResult(context.ModelState);
 
-           // services.AddControllers();//.AddXmlSerializerFormatters(); => this was move to the installer
+                      // TODO: add `using using System.Net.Mime;` to resolve MediaTypeNames
+                      result.ContentTypes.Add(MediaTypeNames.Application.Json);
+                      result.ContentTypes.Add(MediaTypeNames.Application.Xml);
 
-           
+                      return result;
+
+                  };
+              });
+            // services.AddControllers();//.AddXmlSerializerFormatters(); => this was move to the installer
+
+
 
             //service installation goes here
-            
+
             services.AddServicesInstaller(Configuration);
 
             // services.AddBasicAuthenticationService();  //==>Note this set basic authentication globally
@@ -103,24 +124,8 @@ namespace WebApiCore3Swagger
             //add mailing serivce
             services.AddMessageServices(Configuration);
             //mvc
-            services.AddMvc(config =>
-            {
-                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
-            }).ConfigureApiBehaviorOptions(options =>
-            {
-                //Global validation on posted objects with dataanotations.
-                options.InvalidModelStateResponseFactory = context =>
-                {
-                    var result = new BadRequestObjectResult(context.ModelState);
-
-                    // TODO: add `using using System.Net.Mime;` to resolve MediaTypeNames
-                    result.ContentTypes.Add(MediaTypeNames.Application.Json);
-                    result.ContentTypes.Add(MediaTypeNames.Application.Xml);
-
-                    return result;
-
-                };
-            }).AddNewtonsoftJson(); //Note add this package => Microsoft.AspNetCore.Mvc.NewtonsoftJson to the project this support the controller to return JsonResult 
+          
+          //Note add this package => Microsoft.AspNetCore.Mvc.NewtonsoftJson to the project this support the controller to return JsonResult 
 
 
 

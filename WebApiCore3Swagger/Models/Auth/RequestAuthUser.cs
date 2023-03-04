@@ -11,7 +11,7 @@ namespace WebApiCore3Swagger.Models.Auth
         [Required(ErrorMessage ="UserName is a required field")]
         public string userName { get; set; }
 
-        [Required(ErrorMessage = "Password is a required field")]
+      [Required(ErrorMessage = "Password is a required field")]
         public string Password { get; set; }
     }
 }

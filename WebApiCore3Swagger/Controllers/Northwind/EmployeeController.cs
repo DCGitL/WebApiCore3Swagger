@@ -72,7 +72,7 @@ namespace WebApiCore3Swagger.Controllers.Northwind
             string val = JsonConvert.SerializeObject(results);
           //  await sendmail.SendMail(val, EnumEmailType.plaintext);
 
-            return Ok(results);
+            return Ok(results);  
         }
 
 
@@ -131,7 +131,6 @@ namespace WebApiCore3Swagger.Controllers.Northwind
                 var jsstring = "{\"employees\":" + employeesstr + "}";
                 var jobject = JObject.Parse(jsstring);
                 return Ok(jobject);
-
             }
 
 

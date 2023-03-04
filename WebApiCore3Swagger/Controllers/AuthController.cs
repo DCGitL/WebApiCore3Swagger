@@ -24,9 +24,10 @@ namespace WebApiCore3Swagger.Controllers
         }
 
 
-        [HttpPost, Route("Login")]
+        [HttpPost, Route("Login"),FormatFilter]
         [MapToApiVersion("2.2")]
         [Produces(contentType: "application/json", additionalContentTypes: new string[] { "application/xml" })]
+        [Consumes("application/xml", new[] { "application/json" })]
         [AllowAnonymous]
         public async Task<ActionResult<ResponseAuth>> Login([FromBody] RequestAuthUser user)
         {
