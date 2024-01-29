@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,7 +9,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading.Tasks;
 using WebApiCore3Swagger.Models.Auth;
 using WebApiCore3Swagger.Models.IdentityDbContext;
@@ -34,8 +34,7 @@ namespace WebApiCore3Swagger.Services.Auth
         }
         public async Task<ResponseAuth> AsyncAuthenticate(string userName, string password)
         {
-            try
-            {
+          
                
                 var appUser = await userManager.FindByNameAsync(userName);
                 if (appUser == null && !await userManager.CheckPasswordAsync(appUser, password))
@@ -49,12 +48,7 @@ namespace WebApiCore3Swagger.Services.Auth
                 return tokenResult;
 
 
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw ex;
-            }
+            
  
           
         }
@@ -126,17 +120,10 @@ namespace WebApiCore3Swagger.Services.Auth
 
             };
 
-            try
-            {
+           
                 await appIdentityDbContext.JwtRefreshTokens.AddAsync(_refreshToken);
                 await appIdentityDbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                var msg = ex.Message;
-
-                throw ex;
-            }
+           
             responseAuth.RefreshToken = _refreshToken.RefreshToken;
             return responseAuth ;
         }
@@ -170,21 +157,14 @@ namespace WebApiCore3Swagger.Services.Auth
             var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
             JwtRefreshToken storedRefreshToken = null;
-            try
-            {
+          
                  storedRefreshToken =  appIdentityDbContext.JwtRefreshTokens.FirstOrDefault(r => r.RefreshToken == refreshToken);
 
                 if (storedRefreshToken == null)
                 {
                     return new RefreshTokenResponse { Errors = new[] { "This refresh token does not exist" } };
                 }
-            }
-            catch(Exception ex)
-            {
-                var msg = ex.Message;
-                throw ex;
-
-            }
+           
           
 
             if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)

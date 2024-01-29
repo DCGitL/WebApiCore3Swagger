@@ -15,6 +15,23 @@ namespace WebApiCore3Swagger.Installer
     {
         public void Install(IServiceCollection services, IConfiguration configuration)
         {
+
+
+
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.DefaultApiVersion = new ApiVersion(2, 2);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddEndpointsApiExplorer();
             //swagger
             services.AddSwaggerGen(g =>
             {
