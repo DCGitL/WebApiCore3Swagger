@@ -338,3 +338,12 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+/DemoApicore3swagger/Properties/launchSettings.json
+/Adventure.Works.2012.dbContext/Properties/launchSettings.json
+/TestLib/Properties/launchSettings.json
+/XunitIntegrationTest/Properties/launchSettings.json
+/MessageManager/Properties/launchSettings.json
+/EmployeeDB.Dal/Properties/launchSettings.json

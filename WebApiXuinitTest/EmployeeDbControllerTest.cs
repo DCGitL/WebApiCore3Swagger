@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using WebApiCore3Swagger.Controllers.EmployeeDb;
 using WebApiCore3Swagger.NLogger;
@@ -20,6 +21,7 @@ namespace WebApiXuinitTest
         private readonly Mock<IEmployeeDbRepository> mockDbEmployees;
         private readonly ILogger<EmployeeDbController> loggerMock;
         private readonly ICustomNlogProperties factorycustLog;
+        private readonly CancellationToken _cancellationToken;
         public EmployeeDbControllerTest()
         {
             mockDbEmployees = new Mock<IEmployeeDbRepository>();
@@ -28,23 +30,24 @@ namespace WebApiXuinitTest
                .AddSingleton<ICustomNlogProperties, CustomNlogProperties>()
                .BuildServiceProvider();
             factorycustLog = serviceProvider.GetService<ICustomNlogProperties>();
+            _cancellationToken = new CancellationToken();
         }
 
-        [Fact]
+        [Fact]    
         public async Task GetAllDbEmployeesStatus200Test()
         {
             //Arrange 
-       
+           
             var mockRepository = new MockEmployeeDbRepository();
-            var dbEmployees = await mockRepository.GetEmployeeDbsAsync();
-             mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync()).ReturnsAsync(dbEmployees);
+            var dbEmployees = await mockRepository.GetEmployeeDbsAsync(_cancellationToken);
+             mockDbEmployees.Setup(e => e.GetEmployeeDbsAsync(_cancellationToken)).ReturnsAsync(dbEmployees);
            
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             
 
             //Act
           
-            var result = await employeeDbController.GetallDbEmployees();
+            var result = await employeeDbController.GetallDbEmployees(_cancellationToken);
 
             //Assert
             Assert.NotNull(result);
@@ -63,14 +66,14 @@ namespace WebApiXuinitTest
         {
             var employeeid = 1;
             //Arrange 
-            var dbEmployee = await  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid);
-            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid)).ReturnsAsync(dbEmployee);
+            var dbEmployee = await  new MockEmployeeDbRepository().GetEmployeeDbAsync(employeeid, _cancellationToken);
+            mockDbEmployees.Setup(e => e.GetEmployeeDbAsync(employeeid, _cancellationToken)).ReturnsAsync(dbEmployee);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
              
 
             //Act 
-            var result = await employeeDbController.GetDbEmployee(employeeid);
+            var result = await employeeDbController.GetDbEmployee(employeeid, _cancellationToken);
 
             //Assert
             Assert.NotNull(result);
@@ -98,8 +101,8 @@ namespace WebApiXuinitTest
             };
 
             
-            var dbEmployee = await new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp);
-            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp)).ReturnsAsync(dbEmployee);
+            var dbEmployee = await new MockEmployeeDbRepository().CreateEmployeeDbAsync(emp, _cancellationToken);
+            mockDbEmployees.Setup( e =>  e.CreateEmployeeDbAsync(emp, _cancellationToken)).ReturnsAsync(dbEmployee);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             var expectedLink = "http://localHost/api/v3.1/EmployeeDb/GetDbEmployee/4";
@@ -118,7 +121,7 @@ namespace WebApiXuinitTest
            
 
             //Act
-            var result = await employeeDbController.CreateEmployee(emp);
+            var result = await employeeDbController.CreateEmployee(emp, _cancellationToken);
          
             //Assert
             Assert.NotNull(result);
@@ -136,15 +139,15 @@ namespace WebApiXuinitTest
             var employeeid = 1;
             //Arrange
             var mockRepository = new MockEmployeeDbRepository();
-            var returnval =   mockRepository.DeleteEmployeeDbAsync(employeeid);
-            mockDbEmployees.Setup(e => e.DeleteEmployeeDbAsync(employeeid)).Returns(returnval);
+            var returnval =   mockRepository.DeleteEmployeeDbAsync(employeeid, _cancellationToken);
+            mockDbEmployees.Setup(e => e.DeleteEmployeeDbAsync(employeeid, _cancellationToken)).Returns(returnval);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
             //Act
 
-            var result = await employeeDbController.DeleteDbEmployee(employeeid);
+            var result = await employeeDbController.DeleteDbEmployee(employeeid, _cancellationToken);
 
-            //Assert
+            //Assert    
             Assert.NotNull(result);
             var objectResult = Assert.IsType<OkObjectResult>(result.Result);
             var statuscode = objectResult.StatusCode;
@@ -167,14 +170,14 @@ namespace WebApiXuinitTest
                 Salary = 100000.90m
             };
             var mockRepository = new MockEmployeeDbRepository();
-            var returnval = mockRepository.UpdateEmployeDbAsync(emp);
-            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
+            var returnval = mockRepository.UpdateEmployeDbAsync(emp, _cancellationToken);
+            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp, _cancellationToken)).Returns(returnval);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
 
             //Act
 
-            var result = await employeeDbController.UpdateDbEmployee(emp);
+            var result = await employeeDbController.UpdateDbEmployee(emp, _cancellationToken);
 
 
             //Assert
@@ -204,13 +207,13 @@ namespace WebApiXuinitTest
                 Salary = 100000.90m
             };
             var mockRepository = new MockEmployeeDbRepository();
-            var returnval = mockRepository.UpdateEmployeDbAsync(emp);
-            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp)).Returns(returnval);
+            var returnval = mockRepository.UpdateEmployeDbAsync(emp, _cancellationToken);
+            mockDbEmployees.Setup(e => e.UpdateEmployeDbAsync(emp, _cancellationToken)).Returns(returnval);
 
             var employeeDbController = new EmployeeDbController(mockDbEmployees.Object, loggerMock, factorycustLog);
 
             //Act
-            var result = await employeeDbController.UpdateDbEmployee(emp);
+            var result = await employeeDbController.UpdateDbEmployee(emp, _cancellationToken);
 
 
             //Assert

@@ -2,6 +2,7 @@
 using EmployeeDB.Dal.EmployeeDbResponseModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebApiXuinitTest.MockRepositories
@@ -17,17 +18,28 @@ namespace WebApiXuinitTest.MockRepositories
                    new EmployeeDbResponse {FirstName="Zeena", LastName="Tutunji", Gender="Female", Id=3, Salary = 95000.06m },
                 };
         }
-        public async Task<EmployeeDbResponse> CreateEmployeeDbAsync(EmployeeDbResponse DbEmployee)
+        public async Task<EmployeeDbResponse> CreateEmployeeDbAsync(EmployeeDbResponse DbEmployee, CancellationToken cancellation)
         {
+
+           if (cancellation.IsCancellationRequested)
+            {
+               await Task.FromCanceled(cancellation);
+            }
             dbemployees.Add(DbEmployee);
             return await Task.FromResult(DbEmployee);
             
         }
 
-        public async Task DeleteEmployeeDbAsync(int id)
+        public async Task DeleteEmployeeDbAsync(int id, CancellationToken cancellation)
         {
+
+
             var employee = dbemployees.FirstOrDefault(e => e.Id == id);
-            if(employee != null)
+            if (cancellation.IsCancellationRequested)
+            {
+                await Task.FromCanceled(cancellation);
+            }
+            if (employee != null)
             {
                 dbemployees.Remove(employee);
             }
@@ -35,18 +47,22 @@ namespace WebApiXuinitTest.MockRepositories
             await Task.FromResult(0);
         }
         
-        public async Task<EmployeeDbResponse> GetEmployeeDbAsync(int id)
+        public async Task<EmployeeDbResponse> GetEmployeeDbAsync(int id, CancellationToken cancellation)
         {
+            if (cancellation.IsCancellationRequested)
+            {
+                await Task.FromCanceled(cancellation);
+            }
             var employee = dbemployees.FirstOrDefault(e => e.Id == id);
             return await Task.FromResult(employee);
         }
 
-        public async  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync()
+        public async  Task<IEnumerable<EmployeeDbResponse>> GetEmployeeDbsAsync(CancellationToken cancellation)
         {
             return await Task.FromResult(dbemployees.AsEnumerable<EmployeeDbResponse>());
         }
 
-        public async Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee)
+        public async Task<EmployeeDbResponse> UpdateEmployeDbAsync(EmployeeDbResponse DbEmployee, CancellationToken cancellation)
         {
             var existEmployee = dbemployees.FirstOrDefault(e => e.Id == DbEmployee.Id);
             if (existEmployee != null)
