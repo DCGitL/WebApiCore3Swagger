@@ -36,7 +36,10 @@ namespace WebApiXuinitTest
         {
             var employees = await _repository.GetAllJsonStringEmployeesAsync();
 
-          
+            var result = await repo.GetAllAsyncEmployees();
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Count<ResponseEmployee>());
+
             Assert.NotNull(employees);
         }
     }
