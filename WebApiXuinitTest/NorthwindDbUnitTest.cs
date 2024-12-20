@@ -1,9 +1,6 @@
 ﻿using Adventure.Works._2012.dbContext.Northwind.Repository;
 using Adventure.Works._2012.dbContext.ResponseModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebApiXuinitTest.Helper;
 using Xunit;
@@ -28,7 +25,7 @@ namespace WebApiXuinitTest
 
             var numberofEmployee = employees.Count<ResponseEmployee>();
 
-            Assert.Equal(2, numberofEmployee);
+            Assert.Equal(3, numberofEmployee);
         }
 
         [Fact]
@@ -36,7 +33,7 @@ namespace WebApiXuinitTest
         {
             var employees = await _repository.GetAllJsonStringEmployeesAsync();
 
-            var result = await repo.GetAllAsyncEmployees();
+            var result = await _repository.GetAllAsyncEmployees();
             Assert.NotNull(result);
             Assert.Equal(3, result.Count<ResponseEmployee>());
 

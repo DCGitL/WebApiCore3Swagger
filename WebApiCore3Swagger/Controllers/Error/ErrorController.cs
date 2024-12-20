@@ -51,7 +51,7 @@ namespace WebApiCore3Swagger.Controllers.Error
 
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             
-            logger.LogError(context.Error.StackTrace, $"Unhandled Exception occured at: {DateTime.Now}");
+            logger.LogError(context.Error.StackTrace, "Unhandled Exception occured at: {DateTime}", DateTime.Now);
 
             return Problem(
                 detail: context.Error.StackTrace,
