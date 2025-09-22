@@ -1,9 +1,5 @@
 ﻿using Adventure.Works._2012.dbContext.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebApiXuinitTest.Helper
 {
