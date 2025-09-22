@@ -219,7 +219,7 @@ namespace Adventure.Works._2012.dbContext.Northwind.Repository
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw ex;
+                    throw;
                 }
 
             }

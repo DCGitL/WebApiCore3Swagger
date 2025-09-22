@@ -17,9 +17,10 @@ namespace WebApiCore3Swagger.Authentication.Basic
     {
         private readonly UserManager<ApplicationUser> userManager;
 
+   
         public BasicAuthenticationHandler( IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
-            UrlEncoder encoder, ISystemClock clock, UserManager<ApplicationUser> userManager) : base(options,logger,encoder, clock)
+            UrlEncoder encoder, UserManager<ApplicationUser> userManager) : base (options,logger,encoder)
         {
            
             this.userManager = userManager;

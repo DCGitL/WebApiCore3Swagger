@@ -162,7 +162,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHealthChecksUI();
+
 //Global error handler 
 
 app.MapControllers();

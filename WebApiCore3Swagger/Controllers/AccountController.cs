@@ -42,7 +42,7 @@ namespace WebApiCore3Swagger.Controllers
         [Authorize(Policy= "MustBedavidcomandAdmin")]
         public async Task<ActionResult<IEnumerable<ResponseUser>>> GetAccountUsers()
         {
-
+      
             var users = userManager.Users.Select(u => new ResponseUser
             {
                 City = u.City,

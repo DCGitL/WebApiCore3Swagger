@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Data.Common;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Data;
-using System.Threading.Tasks;
+using System.Data.Common;
 using System.Threading;
-using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
+using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace WebApiCore3Swagger.Health.Datatabase
 {
